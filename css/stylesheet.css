@@ -1,0 +1,96 @@
+.newsletter_code {
+	background-color: #FAFAFA; 
+	border: #D1D7DC;
+	width: 600px; 
+	border-style: solid;
+	border-left-width: 1px; 
+	border-top-width: 1px; 
+	border-right-width: 1px; 
+	border-bottom-width: 1px;
+	padding: 20px;
+}
+.newsletter_subscribe_errmsg {
+	background-color: #FFAEAE; 
+	color: maroon;
+	width: 90%;
+	border: solid 4px gray;
+	margin: 3%;	
+	padding: 10px;
+	border-radius:8px;
+	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
+	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.35);
+}
+.newsletter_subscribe_ok {
+	background-color: #B0E57C; 
+	color: #004000;
+	width: 90%;
+	border: solid 4px gray;
+	margin: 3%;	
+	padding: 10px;
+	border-radius:8px;
+	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
+	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.35);
+}
+
+.newsleter_fieldset {
+	padding:10px;
+}
+.newsleter_legend {
+	color: gray;
+}	
+.newsletter_label {
+	width: 120px;
+	display:inline-block;
+}
+.newsletter_inputfield {
+	width: 400px;
+}
+.newsletter_textarea {
+	width: 467px;
+	height: 320px;
+	border: 1px solid #aaa;
+	padding: 5px;
+}
+.newsletter_submit {
+	height:30px;
+	width:100%;	
+	font-weight:bold;
+	font-size: 1.1em;
+}
+#err {
+	color: red;
+	margin-left: 30px;
+	margin-bottom: 5px;
+}
+
+#newsletter_credits a:link a:visited {
+  
+}
+#newsletter_credits a:hover {
+  color:  red;
+  font-size: 12px;
+  font-weight: bold;
+}
+/*
+PLEASE DO NOT CHANGE,
+unless you have purchased the Remote Link license.
+
+To remove the link add a line
+dispaly: none; to #newsletter_credits css below
+so it looks as follows
+  
+#newsletter_credits {
+display: none;
+font size: 10px;
+.......
+}
+You must also change the License to 
+"Remove Link" in the plugin configuration
+*/
+#newsletter_credits {
+	font-size: 10px;
+	text-align: right;
+	line-height: 11px;
+  padding-top:2px;
+	vertical-align: bottom;
+}
