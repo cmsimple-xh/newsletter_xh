@@ -85,7 +85,7 @@ Your name";
   $plugin_tx['newsletter']['cf_smtp_auth']="<p>Set to true if your smtp server requires authentication.</p>"; 
   $plugin_tx['newsletter']['cf_smtp_auth_username']="<p>Authentification username to SMTP server.</p>";
   $plugin_tx['newsletter']['cf_smtp_auth_password']="<p>Authentification password to SMTP server.</p>";
-  $plugin_tx['newsletter']['terms_of_use']='<p><strong>Terms of use:</strong></p><p>Newsletter may only be used to send messages to subscribers who voluntary have agreed to receive messages from your website by subscribing. All other use is to be regarded as spamming and is prohibited. </p><p>For commercial use Newsletter is released under Commercial License. Visit Newsletters page on <a href="http://simplesolutions.dk">simpleSolutions</a> to buy license</p><p> By using the Newsletter you automatically accept these conditions.</p>';
+  $plugin_tx['newsletter']['terms_of_use']='<p><strong>Terms of use:</strong></p><p>Newsletter may only be used to send messages to subscribers who voluntary have agreed to receive messages from your website by subscribing. All other use is to be regarded as spamming and is prohibited.</p><p> By using the Newsletter you automatically accept these conditions.</p>';
   $plugin_tx['newsletter']['cf_debug']="0 = off (for production use)  1 = client messages  2 = client and server messages";
   
   $plugin_tx['newsletter']['cf_license']="<p>Default is Linkware</p><p><strong>Do not change unless you have purchased Newslterrer Remove Link license on simplesolutions.dk website</strong></p>";    
