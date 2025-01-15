@@ -8,7 +8,7 @@
  * @license Released under Remove Link License and Commercial License. Please read file TermsOfUse.txt included in distribution package. 
  * @license Visit simplesolutions.dk for user manual and to buy a licence.
  *
- * Message from Jerry Jakobsfeld (2024-01-09)
+ * Message from Jerry Jakobsfeld (2025-01-09)
  * I stoped development of CMSimple plug-ins som time ago. Your welcome to use my development as you wish, it's free for use, changes and further development.
  *
  * @copyright 2025 The CMSimple_XH developers <http://cmsimple-xh.org/?The_Team>

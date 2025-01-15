@@ -17,6 +17,6 @@
 
 -----
 
-Message from Jerry Jakobsfeld (2024-01-09)
+Message from Jerry Jakobsfeld (2025-01-09)
 
 I stoped development of CMSimple plug-ins som time ago. Your welcome to use my development as you wish, it's free for use, changes and further development.
