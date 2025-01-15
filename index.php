@@ -92,24 +92,13 @@
    updated to CMSimple XH version 1.7
    
  version 2.5.0
-   updated to CMSimple XH version 1.7
+   updated to CMSimple XH version 1.8
 */
 
-//global $f, $pth;
-// PHPMailer 
+// PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
-
-if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
-    include_once __DIR__ . '/phpmailer/PHPMailer.php';
-}
-if (!class_exists('PHPMailer\PHPMailer\Exception')) {
-    include_once __DIR__ . '/phpmailer/Exception.php';
-}
-if (!class_exists('PHPMailer\PHPMailer\SMTP')) {
-    include_once __DIR__ . '/phpmailer/SMTP.php';
-}
 
 if (isset($_GET['newsletterconfirm'])) {
     $f='newsletterconfirm';
@@ -351,16 +340,7 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
         $o.='<input name="single_newspage" type="hidden" value="'.rswu($newspage_list).'">'.'&nbsp;';    
     }
     $o.='<br>'.'<span class="newsletter_label"></span>'.'<input type="submit" class="submit" value="'.$plugin_tx['newsletter']['send'].'">'.'</form>';
-    $o.='<br>';
-    
-    
-    $o.='<div id="newsletter_credits">'.newsletter_license("html").'</div>';    
     return $o;
-}
-
-function newsletter_license($nl_type)
-{
-  return '';
 }
 
 function rswu($fname)
@@ -495,7 +475,17 @@ function newsletter_subscription_mail($subscribermail, $subject, $msg, $link)
 {
     global $plugin_cf, $plugin_tx, $cf, $tx, $pth, $sl, $subscribe_confirmation_mail;
 
-    //include_once('phpmailer/class.phpmailer.php');
+    // PHPMailer
+    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+        include_once __DIR__ . '/phpmailer/PHPMailer.php';
+    }
+    if (!class_exists('PHPMailer\PHPMailer\Exception')) {
+        include_once __DIR__ . '/phpmailer/Exception.php';
+    }
+    if (!class_exists('PHPMailer\PHPMailer\SMTP')) {
+        include_once __DIR__ . '/phpmailer/SMTP.php';
+    }
+
     $plugin = basename(dirname(__file__), "/");
     $mail = new PHPMailer();
   if (trim($plugin_cf['newsletter']['smtp'])!="") {
@@ -523,9 +513,8 @@ function newsletter_subscription_mail($subscribermail, $subject, $msg, $link)
     $mail->FromName = (trim($plugin_cf['newsletter']['from_name'])=="")?$cf['site']['title']:$plugin_cf['newsletter']['from_name'];
     $mail->Subject = $subject;
     $mail->AddAddress(trim($subscribermail), "");    
-    $mail->AltBody = $msg."\n\r".$link."\n\r".$plugin_tx['newsletter']['alt_footer']."\n\r".newsletter_license("text");
-  
-    
+    $mail->AltBody = $msg."\n\r".$link."\n\r".$plugin_tx['newsletter']['alt_footer'];
+
     $confirmation_template_file=$pth['folder']['plugins'].$plugin."/templates/".$sl."_template_confirmation.htm";
     if (!file_exists($confirmation_template_file)) {
         $confirmation_template_file=$pth['folder']['plugins'].$plugin."/templates/template_confirmation.htm";
@@ -536,7 +525,6 @@ function newsletter_subscription_mail($subscribermail, $subject, $msg, $link)
         $link_href='<a href="'.$link.'">'.$link.'</a>'.'<br>';
 //var_dump ($confirmation_template_file);
     $template=preg_replace('/\{CONTENT\}/',$msg.'<br>'.$link_href,$template);
-    $template=preg_replace('/<.*\/.*body.*>/i','<br>'.newsletter_license("html")."</body>",$template);
 //var_dump($template);
     
     $mail->MsgHTML($template);

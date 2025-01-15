@@ -16,24 +16,23 @@
  * @license    GNU GPLv3 - http://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-// PHPMailer 
+// PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
-    include_once __DIR__ . '/phpmailer/PHPMailer.php';
-}
-if (!class_exists('PHPMailer\PHPMailer\Exception')) {
-    include_once __DIR__ . '/phpmailer/Exception.php';
-}
-if (!class_exists('PHPMailer\PHPMailer\SMTP')) {
-    include_once __DIR__ . '/phpmailer/SMTP.php';
-}
-
 if (isset($_GET['newsletter'])) {
-  global $hjs, $tx, $sl, $plugin_tx;
-  
+
+    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+        include_once __DIR__ . '/phpmailer/PHPMailer.php';
+    }
+    if (!class_exists('PHPMailer\PHPMailer\Exception')) {
+        include_once __DIR__ . '/phpmailer/Exception.php';
+    }
+    if (!class_exists('PHPMailer\PHPMailer\SMTP')) {
+        include_once __DIR__ . '/phpmailer/SMTP.php';
+    }
+
   if (!isset($_SESSION['NEWSLETTER']['MailSession'])) {
     //session_start();
     $_SESSION['NEWSLETTER']['MailSession'] = "ok";
@@ -42,7 +41,7 @@ if (isset($_GET['newsletter'])) {
   $admin = isset($_POST['admin']) ? $_POST['admin'] : (isset($_GET['admin'])?$_GET['admin']:"");
   $action = isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action'])?$_GET['action']:"");
   $plugin = basename(dirname(__file__), "/");
-  $o='<h1>Newsletter</h1>Newsletter_XH</a>';
+  $o='<h1>Newsletter_XH</h1>';
   $newsletter_adminmail = isset($_POST['adminmail']) ? $_POST['adminmail'] : (isset($_GET['adminmail'])?$_GET['adminmail']:"");//$_GET['adminmail'];
   $newsletter_subject = isset($_POST['subject']) ? $_POST['subject'] : (isset($_GET['subject'])?$_GET['subject']:"");//$_GET['subject'];
   $newspage = isset($_POST['nlp']) ? $_POST['nlp'] : (isset($_GET['nlp'])?$_GET['nlp']:"");//$_GET['nlp'];
@@ -93,8 +92,6 @@ if (isset($_GET['newsletter'])) {
     $newsletter_t .= '</a></td></tr></table>';
     $newsletter_t.=newsletter_template_file($pth,$plugin,$sl,$newspage,$newsletter_template_file);
     $template=file_get_contents($newsletter_template_file);
-    $template=preg_replace("/<.*\/.*body.*>/i",newsletter_license("html")."</body>",$template,1);
-      $newsletter_t .= '<h4>' . ucfirst(str_replace("_", " ", $plugin)) . '</h4>';        
     if ($action == 'publish') {
       if (trim($newsletter_adminmail) == "")
         $newsletter_adminmail = ($plugin_cf['newsletter']['adminmail'] == "") ? $cf['mailform']['email'] :
@@ -163,7 +160,7 @@ if (isset($_GET['newsletter'])) {
       
       $_SESSION['NEWSLETTER']['MailFromName'] = (trim($plugin_cf['newsletter']['from_name']) == "")? $tx['site']['title']:$plugin_cf['newsletter']['from_name'];
      
-      $_SESSION['NEWSLETTER']['MailAltBody'] = $plugin_tx['newsletter']['alt_body'].newsletter_headpath($h, $l, $newspage)."\r\n".$plugin_tx['newsletter']['alt_footer']."\r\n\r\n".$plugin_tx['newsletter']['alt_unsubscribe'].$_SESSION['subscribe_page']."\r\n".newsletter_license("text");
+      $_SESSION['NEWSLETTER']['MailAltBody'] = $plugin_tx['newsletter']['alt_body'].newsletter_headpath($h, $l, $newspage)."\r\n".$plugin_tx['newsletter']['alt_footer']."\r\n\r\n".$plugin_tx['newsletter']['alt_unsubscribe'].$_SESSION['subscribe_page'];
       $_SESSION['NEWSLETTER']['MailHTMLBody'] = $template;
       if ($newsletter_submit != '') { // send email to all subscribers or test email to administrator
         // Init phpmailer
