@@ -163,20 +163,28 @@ function newsletter($newspage_list)
     return $o;
 }
 
-function confirm_subscription() 
+function confirm_subscription()
 {
-    global $plugin_tx, $plugin_cf, $mail_confirm_subscribtion;
-    
-    $tmp=newsleter_convert($_GET['cnf'],0); //decrypt;
-    $tmp=explode("¤¤¤",$tmp);
-    $o="<h1>".$plugin_tx['newsletter']['subscribe']."</h1>";
+    global $mail_confirm_subscribtion, $plugin_cf, $plugin_tx;
+
+    //decrypt;
+    $ky = $plugin_cf['newsletter']['encrypt_key'];
+    if ($ky != '') {
+        $tmp = newsleter_convert($_GET['cnf'],0);
+    } else {
+        $tmp = $_GET['cnf'];
+    }
+    $tmp = explode('¤¤¤', $tmp);
+    $o = '<h1>' . $plugin_tx['newsletter']['subscribe'] . '</h1>';
     $newspage[] = $tmp[1];
-    $tmp=explode("@@@",$tmp[0]);
-    $subscribermail=$tmp[0];
+    $tmp = explode('@@@', $tmp[0]);
+    $subscribermail = $tmp[0];
     unset($tmp[0]);
     $tmp = array_values($tmp);
-    $mail_confirm_subscribtion="thx"; // overwrite  
-    $o.=newsletter_AddSubscriberToList($newspage, $subscribermail, $tmp);
+    // overwrite
+    $mail_confirm_subscribtion = 'thx';
+    $o .= newsletter_AddSubscriberToList($newspage, $subscribermail, $tmp);
+
     return $o;
 }
 
@@ -312,34 +320,52 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
         }    
     }        
 
-    if(!isset($_GET['uns'])) {
-        $o.='<div id="userinput">';
-        $o.=$user_input;
-        $o.='</div>';
+    if (!isset($_GET['uns'])) {
+        $o .= '<div id="userinput">';
+        $o .= $user_input;
+        $o .= '</div>';
     }    
-    $o.='<br>';
+    $o .= '<br>';
 
-    $newspage_arr= explode(",",$newspage_list);
-//echo     "newspage_list=[$newspage_list] count=".count($newspage_arr);
-    if (count($newspage_arr)>1) { // multiple newsletter subscribe, create checkboxes
-    
-        $o.= ((isset($_GET['uns']))?$plugin_tx['newsletter']['select_newsletters_unsubscribe']:$plugin_tx['newsletter']['select_newsletters_subscribe']).'<br>';
+    $newspage_arr = explode(',', $newspage_list);
+    if (count($newspage_arr) > 1) {
+        // multiple newsletter subscribe, create checkboxes
+        $o .= ((isset($_GET['uns']))
+                ? $plugin_tx['newsletter']['select_newsletters_unsubscribe']
+                : $plugin_tx['newsletter']['select_newsletters_subscribe'])
+            . '<br>';
         foreach ($newspage_arr as $np) {
-            $checked=false;
-            for ($i=0; $i<sizeof($newspages);$i++) {
-                
-                if (rswu(trim($np))==trim($newspages[$i])) {     
-                    $checked=true;
+            $checked = false;
+            for ($i = 0; $i < sizeof($newspages); $i++) {
+                if (rswu(trim($np)) == trim($newspages[$i])) {
+                    $checked = true;
                 }
             }
-            $o.= '<br>'.'<span class="newsletter_label">'.trim($np).':&nbsp;</span>'.'<input name="news_page[]" type="checkbox"'.($checked?'checked="yes"':'>'.' value="'.rswu(trim($np)).'"');
+            $o.= '<br>'
+               . '<span class="newsletter_label">'
+               . trim($np)
+               . ':&nbsp;</span>'
+               . '<input name="news_page[]" type="checkbox"'
+               . ($checked
+                    ? 'checked="yes"'
+                    : ' value="'.rswu(trim($np)) . '"')
+               . '>';
         }
-        $o.='<br>';
+        $o .=' <br>';
+    } else {
+        // singel newsletter subscribe
+        $o .= '<input name="single_newspage" type="hidden" value="'
+            . rswu($newspage_list)
+            . '">'
+            .'&nbsp;';
     }
-    else { // singel newsletter subscribe
-        $o.='<input name="single_newspage" type="hidden" value="'.rswu($newspage_list).'">'.'&nbsp;';    
-    }
-    $o.='<br>'.'<span class="newsletter_label"></span>'.'<input type="submit" class="submit" value="'.$plugin_tx['newsletter']['send'].'">'.'</form>';
+    $o .= '<br>'
+        . '<span class="newsletter_label"></span>'
+        . '<input type="submit" class="submit" value="'
+        . $plugin_tx['newsletter']['send']
+        . '">'
+        . '</form>';
+
     return $o;
 }
 
@@ -559,33 +585,35 @@ function newsletter_verify_fields($inputs) {
     return true;
 }
 
-// String EnCrypt + DeCrypt function 
-// Author: halojoy, July 2006 
+// String EnCrypt + DeCrypt function
+// Author: halojoy, July 2006
 // encrypt = 1, decrypt = 0
 function newsleter_convert($str, $encrypt){
     global $plugin_cf; 
 
-    if (!$encrypt)  
-      $str = base64_decode(rawurldecode($str));  // decrypt
-    $ky=$plugin_cf['newsletter']['encrypt_key'];
-    if($ky=='')return $str; 
-        
-    $ky=str_replace(chr(32),'',$ky); 
-    if(strlen($ky)<8)exit('key error'); 
-    $kl=strlen($ky)<32?strlen($ky):32; 
-    $k=array();
-    
-    for($i=0;$i<$kl;$i++) { 
-        $k[$i]=ord($ky[$i])&0x1F;
-    } 
-    $j=0;
-    for($i=0;$i<strlen($str);$i++){ 
-        $e=ord($str[$i]); 
-        $str[$i]=$e&0xE0?chr($e^$k[$j]):chr($e); 
+    if (!$encrypt)
+        // decrypt
+        $str = base64_decode(rawurldecode($str));
+    $ky = $plugin_cf['newsletter']['encrypt_key'];
+    if ($ky == '') return $str;
+
+    $ky = str_replace(chr(32), '', $ky);
+    if (strlen($ky) < 8) exit('key error');
+    $kl = strlen($ky) < 32 ? strlen($ky) : 32;
+    $k = array();
+
+    for ($i = 0; $i < $kl; $i++) {
+        $k[$i] = ord($ky[$i])&0x1F;
+    }
+    $j = 0;
+    for ($i = 0; $i < strlen($str); $i++) {
+        $e = ord($str[$i]); 
+        $str[$i] = $e&0xE0 ? chr($e^$k[$j]) : chr($e);
         $j++;
-        $j=$j==$kl?0:$j;
-    } 
+        $j = $j == $kl ? 0 : $j;
+    }
     if ($encrypt)
-        $str= rawurlencode(base64_encode($str));  // encrypt
+        // encrypt
+        $str = rawurlencode(base64_encode($str));
     return $str;
 }
