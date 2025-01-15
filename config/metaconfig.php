@@ -9,7 +9,7 @@
  * @license Visit simplesolutions.dk for user manual and to buy a licence.
  *
  * Message from Jerry Jakobsfeld (2024-01-09)
- * I stoped development of CMSiple plug-ins som time ago. Your welcome to use my development as you wish, it's free for use, changes and further development.
+ * I stoped development of CMSimple plug-ins som time ago. Your welcome to use my development as you wish, it's free for use, changes and further development.
  *
  * @copyright 2025 The CMSimple_XH developers <http://cmsimple-xh.org/?The_Team>
  * @author    The CMSimple_XH developers <devs@cmsimple-xh.org>
