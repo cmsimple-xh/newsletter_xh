@@ -378,67 +378,99 @@ function rswu($fname)
 }
 
 function newsletter_AddSubscriberToList($newspages, $subscribermail, $subscriberfield) {
+
     global $plugin_tx, $pth, $mail_confirm_subscribtion;
-    
-    $subscribe_msg="";
-    if (newsletter_verify_email($subscribermail) &&  newsletter_verify_fields($subscriberfield)) {
-        $subscriber_class ='newsletter_subscribe_ok';
+
+    $subscribe_msg = '';
+    if (newsletter_verify_email($subscribermail)
+    &&  newsletter_verify_fields($subscriberfield)) {
+        $subscriber_class = 'newsletter_subscribe_ok';
         foreach ($newspages as $np) {
-            $fc=file($pth['folder']['plugins']."newsletter/data/subscribe_".rswu($np).".txt");
-            if ($fh=fopen($pth['folder']['plugins']."newsletter/data/subscribe_".rswu($np).".txt", "w")) {
+            $fhandle = $pth['folder']['plugins']
+                     . 'newsletter/data/subscribe_'
+                     . rswu($np)
+                     . '.txt';
+            if (is_readable($fhandle)) {
+                $fc = file($fhandle);
+            }
+            if ($fh = fopen($fhandle, 'w')) {
                 //$fc=array_unique($fc);
                 foreach($fc as $line) {
-                    if (stripos($line,$subscribermail)===false) {
-                        fwrite($fh,$line);    // rewrite subscribers list except all instances of the subscriber mail
+                    if (stripos($line, $subscribermail) === false) {
+                        // rewrite subscribers list except all instances of the subscriber mail
+                        fwrite($fh, $line);
                     }
                 }
-                $subscriber_str=$subscribermail;
-                if (trim($plugin_tx['newsletter']['subscriber_fields_label'])!="") {
-                    for ($i=0;$i<sizeof($subscriberfield);$i++) {
-                        $subscriber_str.="@@@".($subscriberfield[$i]==""?" ":trim($subscriberfield[$i]));
+                $subscriber_str = $subscribermail;
+                if (trim($plugin_tx['newsletter']['subscriber_fields_label']) != '') {
+                    for ($i = 0; $i < sizeof($subscriberfield); $i++) {
+                        $subscriber_str .= '@@@'
+                                         . ($subscriberfield[$i] == ''
+                                            ? ' '
+                                            : trim($subscriberfield[$i]));
                     }
                 }
-                if (fwrite($fh,$subscriber_str."\r\n")) { // write new subscriber
-                    $subscribe_msg.=$np.": ".$plugin_tx['newsletter']['subscribe_succes'].'<br>';
+                if (fwrite($fh,$subscriber_str . "\r\n")) {
+                    // write new subscriber
+                    $subscribe_msg .= $np . ': '
+                                    . $plugin_tx['newsletter']['subscribe_succes']
+                                    . '<br>';
                 }  
                 else {
-                    $subscriber_class ='newsletter_subscribe_errmsg';
-                    $subscribe_msg.=$np.": ".$plugin_tx['newsletter']['subscribe_fail'];
-                    $mail_confirm_subscribtion=""; //destroy $mail_confirm_subscribtion
+                    $subscriber_class = 'newsletter_subscribe_errmsg';
+                    $subscribe_msg .= $np
+                                    . ': '
+                                    . $plugin_tx['newsletter']['subscribe_fail'];
+                    //destroy $mail_confirm_subscribtion
+                    $mail_confirm_subscribtion = '';
                 }
                 fclose($fh);
-            }
-            else {
-                $subscribe_msg.=$np.": ".$plugin_tx['newsletter']['subscribe_fail'];
-                $subscriber_class ='newsletter_subscribe_errmsg';
+            } else {
+                $subscribe_msg .= $np
+                                . ': '
+                                . $plugin_tx['newsletter']['subscribe_fail'];
+                $subscriber_class = 'newsletter_subscribe_errmsg';
             }
         }
-    $subscribe_msg.='<br>';
-        $mail_confirm_subscribtion= strtolower(trim($mail_confirm_subscribtion));
-        switch ($mail_confirm_subscribtion) {
-            case "yes":
-            case "mail":
-                $subscribe_msg.=newsletter_subscription_mail($subscribermail, $plugin_tx['newsletter']['subscribe_succes_subject'],$plugin_tx['newsletter']['mail_subscribe_succes'],"");
-                break;
-            case "user":
-                $subscribe_msg.=$plugin_tx['newsletter']['subscribe_confirm_text'];
-                break;
-            case "thx":
-                $subscribe_msg.=$plugin_tx['newsletter']["mail_subscribe_thx"];
-                break;
-            default:
-                break;
+        $subscribe_msg .= '<br>';
+            $mail_confirm_subscribtion = strtolower(trim($mail_confirm_subscribtion));
+            switch ($mail_confirm_subscribtion) {
+                case 'yes':
+                case 'mail':
+                    $subscribe_msg .= newsletter_subscription_mail($subscribermail,
+                                                                   $plugin_tx['newsletter']['subscribe_succes_subject'],
+                                                                   $plugin_tx['newsletter']['mail_subscribe_succes'],
+                                                                   '');
+                    break;
+                case 'user':
+                    $subscribe_msg .= $plugin_tx['newsletter']['subscribe_confirm_text'];
+                    break;
+                case 'thx':
+                    $subscribe_msg .= $plugin_tx['newsletter']["mail_subscribe_thx"];
+                    break;
+                default:
+                    break;
+            }
+            $subscribe_msg = '<div class="'
+                           . $subscriber_class
+                           . '"><p>'
+                           . $plugin_tx['newsletter']["subscription_for"]
+                           . $subscribermail.
+                           ' </p><p>'
+                           . $subscribe_msg
+                           . '</p></div>';
+    } else { // user data error
+        if (!newsletter_verify_email($subscribermail)) {
+            $subscribe_msg = $plugin_tx['newsletter']['mail_not_valid']
+                           . '&nbsp;';
         }
-        $subscribe_msg='<div class="'.$subscriber_class.'"><p>'.$plugin_tx['newsletter']["subscription_for"].$subscribermail.'</p><p>'.$subscribe_msg.'</p></div>';
+        if (!newsletter_verify_fields ($subscriberfield)) {
+            $subscribe_msg .= $plugin_tx['newsletter']['subscriber_fields_mandatory'];
+        }
+        $subscriber_class = 'newsletter_subscribe_errmsg';
     }
-    else { // user data error
-        if (!newsletter_verify_email($subscribermail))
-            $subscribe_msg=$plugin_tx['newsletter']['mail_not_valid']. '&nbsp;';
-        if (!newsletter_verify_fields ($subscriberfield))
-            $subscribe_msg.= $plugin_tx['newsletter']['subscriber_fields_mandatory'];                
-        $subscriber_class ='newsletter_subscribe_errmsg';
-    }
-    return $subscribe_msg;            
+
+    return $subscribe_msg;
 }
 
 function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfield ) {
