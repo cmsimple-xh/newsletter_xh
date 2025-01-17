@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsletter_XH – Manual</title>
+    <style>
+:root {
+    scroll-behavior: smooth;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background-color: #e2e2e2;
+    font: 16px/1.5em sans-serif;
+    color: #333;
+}
+#wrapper {
+    padding: 0;
+    width: 980px;
+    margin: 0 auto;
+    max-width: 100%;
+}
+article.main {
+    background: #fff;
+    padding: 2em;
+    float: left;
+    width: 75%;
+    margin: 0;
+    position: relative;
+}
+nav {
+    display: inline-block;
+    position: fixed;
+    padding: 0 1em;
+    max-height: 100vh;
+    overflow: auto;
+    max-width: 25%;
+    top: 2em;
+}
+nav ul {
+    list-style: none;
+    padding-left: 0;
+    text-align: left;
+}
+nav ul ul {
+    font-size: small;
+    padding-left: 1em;
+}
+nav a {
+    color: #000;
+    display: block;
+    padding: .25em 0;
+    margin: 0 0 .1em;
+    text-decoration: none;
+}
+.additional {
+    font-size: .9em;
+    color: #666;
+}
+p.code {
+    font-family: monospace;
+    border: 1px solid #ccc;
+    background: #efefef;
+    padding: 0.1em 0.25em;
+    word-wrap: break-word;
+    margin: .5em 0;
+}
+span.code {
+    font-family: monospace;
+    background: #efefef;
+    padding:.1em .25em;
+}
+hr {
+    border: none;
+    border-top: 1px dotted #666;
+    color: transparent;
+    background-color: transparent;
+    height: 1px;
+    margin: .5em 0;
+}
+p {
+    margin: 0;
+}
+ul,
+ol {
+    padding: 0 0 0 2em;
+}
+h1,
+h2,
+h3 {
+    font-weight: normal;
+    margin: 1em 0 .25em 0;
+    line-height: 1.25em;
+    color: #000;
+}
+h1 {
+    font-size: 2.2em;
+    margin-top: 0;
+}
+h2 {
+    font-size: 1.4em;
+}
+h3 {
+    font-size: 1.2em;
+}
+div.logo {
+    height: 4em;
+    width: 4em;
+    float: right;
+    margin: 0 0 1em 1em;
+}
+div.logo img {
+    height: 100%;
+    width: 100%;
+}
+a {
+    color: #666;
+}
+img a {
+    text-decoration: none !important;
+}
+@media screen and (max-width: 640px) {
+body {
+    font-size: 12px;
+}
+nav {
+    display: inline-block;
+    position: relative;
+    width: auto;
+    overflow: hidden;
+    height: auto;
+  padding: 0 2em 2em;
+}
+article.main {
+    width: 100%;
+    max-width: 100%;
+    float: none;
+}
+}
+hr {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+.borderFrame {
+    border: 3px double #333;
+    padding: 0.5em;
+}
+</style> </head>
+  <body>
+    <div id="wrapper">
+      <article class="main">
+        <!--div class="logo"><img src="newsletter-logo.svg" alt="Newsletter Logo"></div-->
+        <h1 id="start">Newsletter_XH</h1>
+        <hr>
+        <h2 id="terms">Terms of use</h2>
+        <p>Newsletter may only be used to send messages to subscribers who
+          voluntary have agreed to receive messages from your website by
+          subscribing. All other use is to be regarded as spamming and is
+          prohibited.</p>
+        <p><br>
+        </p>
+        <p><strong>Options</strong></p>
+        <ul>
+          <li>Unlimited number of e-mails (thought your provider may have some
+            restrictions).</li>
+          <li>Mails are send in user defined periods of time to avoid server
+            timeouts.</li>
+          <li>Resume sending of mails after timeout or crash.</li>
+          <li>Multiple Newsletter Lists.</li>
+          <li>Subscription page with subscription form to one or more user
+            selectable Newsletters Lists</li>
+          <li>Newsletter templates</li>
+          <li>User activation of subscription (optional)</li>
+          <li>admin defined template for subscription and unsubscription
+            confirmation mails</li>
+          <li>Support for both SMTP and php mailing function through PHPMailer</li>
+          <li>Support for both HTML and text based mail clients through
+            PHPMailer</li>
+          <li>Attachments (optional)</li>
+          <li>Preview of ready to send mail and possibility to send evaluation
+            mail to admin</li>
+          <li>Mailing log</li>
+          <li>admin defined newsletter templates</li>
+          <li>Additional user defined fields.</li>
+          <li>This plugin does not require use of cookies.</li>
+        </ul>
+        <p><br>
+        </p>
+        <p>Newsletter can send unlimited number of newsletters and, depending of
+          newsletter size, is capable to send up to 800-1000 letters per minute.
+          Please be aware of that many providers have restriction on amount of
+          bulk mails so to be on the safe side check out with your provider.</p>
+        <p><br>
+        </p>
+        <h2 id="requirements">Requirements</h2>
+        <p><em>newsletter_XH</em> requires CMSimple_XH ≥ 1.7 and PHP ≥ 7.4</p>
+        <p><br>
+        </p>
+        <h2 id="installation">Installation</h2>
+        <p>The installation is the same as for many other CMSimple_XH plugins.</p>
+        <p>Download and uncompress newsletter.zip Upload the entire newsletter
+          folder to your "plugins" directory.</p>
+        <p><br>
+        </p>
+        <p>Then follow these 2 steps</p>
+        <ol>
+          <li class="code">Create a new subscription page and insert: <br>
+            <span class="code">{{{newsletter('<span style="color: red;">My
+                Newsletter 11</span>')}}}</span> some place on your page (use
+            single quotes only). This page will be used to subscribe to your
+            newsletter. You can call it "Subscribe single Newsletter" or
+            anything else.</li>
+          <li> Create a second page with the title <span style="color: red;">My
+              Newsletter 11</span> (same title as you specified on the page to
+            administration of subscribers ). This is the page where you create
+            your newsletters content.</li>
+        </ol>
+        <p><br>
+        </p>
+        <p>To create multiple newsletters repeat step 1 and 2. Remember to name
+          pages something else (for instance "My Newsletter 2"). To create a
+          subscription page with subscription to multiple Newsletters insert a
+          comma separated list of newsletters:</p>
+        <p><span class="code">{{{newsletter('<span style="color: red;">My
+              Newsletter 11, My Newsletter 12, And so on</span>')}}}</span></p>
+        <p>and create corresponding Newsletter content pages as described above.</p>
+        <p><br>
+        </p>
+        <div style="text-align: left;"><img src="newsletter_multi.jpg" alt="Subscribe/Unsubscribe"
+            title="Subscribe/Unsubscribe"></div>
+        <div style="text-align: left;"><br>
+        </div>
+        <h2 id="config">Configuration</h2>
+        <ul>
+          <li><b>adminmail</b>: the mail address where you want to send test
+            mail. If left empty the CMSimple mailform email is used.</li>
+          <li>from: is the senders' mail. If left empty the CMSimple mailform
+            email is used.</li>
+          <li><b>form name</b>: is the senders' name. If left empty the CMSimple
+            site title from your language file is used (CMSimple_XH only).</li>
+          <li><b>mail confirm subscription</b>: values mail, user or no (yes can
+            be used instead of mail). mail or yes: the mail is send to new
+            subscriber. The template of this mails is defined in a
+            "Confirmation" template in Plugin Main Settings. user: To activate
+            the subscription the subscriber must reply the mail containing a
+            link to confirmation page on your website. The content of the mail
+            is defined in Plugin language fields "subscribe confirm subject" and
+            "subscribe confirm". All subscription data is encrypted</li>
+          <li><b>mail confirm unsubscription</b>: (yes or no). If yes the mail
+            is send to the subscriber otherwise no. The template of this mail is
+            defined in a "Confirmation" template in Plugin Main Settings and the
+            content is defined in Plugin language fields "unsubscribe success
+            subject" and "unsubscribe success".</li>
+          <li><strong>max execution time</strong>: is the server time in seconds
+            before timeout. You can find it by executing phpinfo.php on your
+            server. Look for max_execution_time. If you experience timeouts when
+            sending newsletters reduce this value to something lower.</li>
+          <li><strong>separator</strong>: You can have several newsletters on
+            the same page. Only the one over the separator will be send. Default
+            is "&lt;hr&gt;".</li>
+          <li><strong>smtp</strong>: insert your internet providers smtp server
+            name. If left blank newsletter will send mails through php mail
+            command. The best sending method is smtp.</li>
+          <li><strong>encrypt key</strong>: 8 to 32 arbitrary characters without
+            spaces. Used to encrypt subscription information in activation mail.</li>
+        </ul>
+        <p><br>
+        </p>
+        <p><strong>Configuration in language files</strong></p>
+        <ul>
+          <li><strong>charset</strong>: Encoding of your choice.If left empty
+            then CMSimple encoding is used.</li>
+          <li><strong>alt body</strong> and <strong>alt footer</strong>:
+            contains mail content of text based mails received by no HTML mail
+            clients. A link to the newsletter page is added at the end of
+            content of alt body.</li>
+          <li><strong>alt unsubscribe</strong>: contains a text followed by link
+            to unsubscribe page (text based mails only).</li>
+          <li><strong>footer_unsubscribe</strong> contains a text that will be
+            converted to a link to the unsubscribe page and replace the
+            placeholder {UNSUBSCRIBE} in a newsletter template.</li>
+          <li><strong>unreadable</strong>: contains text that will be converted
+            to a link to the newsletter content page and replace the placeholder
+            {NOT_READABLE} in a newsletter template. To deactivate leave it
+            empty and/or remove {NOT_READABLE} from the template.<strong><br>
+            </strong></li>
+          <li><strong>subscriber</strong> group contains labels to e-mail input
+            field and to user defined unlimited number of extra text fields. To
+            define extra text fields enter a list of labels to "subscriber
+            fields label" separated by the "subscribe fields delimiter" (default
+            is semicolon). The e-mail field is always mandatory. Extra text
+            fields are only mandatory when "subscriber field mandatory" contains
+            some error message. "Subscriber email empty" and "subscriber fields
+            empty" contains an error message if some fields are left empty
+            before form submission.</li>
+          <li>Newsletter creates a mandatory email field. To get other
+            information from subscriber you must create <strong>additional
+              fields</strong> by filling the field "Fields label" in section
+            Subscribers with a list of field labels separated by a delimiter
+            defined in "Fields delimitter" in the same section, f.ex. "Your
+            Title; Your Name".</li>
+        </ul>
+        <p><br>
+        </p>
+        <p><strong>Configuration of stylesheets for subscription form</strong></p>
+        <p>You may change the values of css classes newsletter_label and
+          newsletter_inputfiel to feet the with of your template.</p>
+        <p><br>
+        </p>
+        <p><strong>Newsletter Templates</strong></p>
+        <p>Newsletter contains a HTML template that is copied to each created
+          newsletter. Multilanguage sites are supported too. Templates contains
+          3 predefined placeholders: {NOT_READABLE}, {CONTENT} and {UNUBSCRIBE}.
+          To show Text fields defined in group subscriber in language file
+          insert placeholders named {TEXTFIELD_1}, {TEXTFIELD_2} and so on.</p>
+        <p><br>
+        </p>
+        <p>Farther there is defined a template for the confirmation sent to the
+          user after subscription and unsubscription. This template contains
+          only one placeholder that will be replaced with corresponding text
+          based on confirmation setup in configuration file.</p>
+        <p><br>
+        </p>
+        <p>All templates are editable from admin section of Newsletter plugin. </p>
+        <p><br>
+        </p>
+        <h2 id="howitworks">How it works</h2>
+        It depends of your provider and the restrictions on your mail server if
+        you can send bulk mail at all. Below is a look of Newsletters sending
+        page.<br>
+        <br>
+        <img src="newsletter.jpg" alt="Newsletter" title="Newsletter"><br>
+        <ul>
+          <li>Select Mailing List (only visible if there are several mailing
+            list) </li>
+          <li>Change Subject if necessary</li>
+          <li>Choose attachment from list if any (attachment list is listing all
+            files in download folder)</li>
+          <li>Change admin email address if necessary</li>
+          <li>Push "Publish"</li>
+        </ul>
+        <p><br>
+        </p>
+        <p>If "Send test mail" is checked then you send only one newsletter to
+          yourself. Check the content, inks and images and if your newsletter is
+          as expected then uncheck the check box and push "Publish" again. </p>
+        <p><br>
+        </p>
+        <p>Sending of newsletters begins. You will first se a screen with
+          sending instruction. After a few seconds the screen is refreshed and
+          the mails are sent. If you are sending many or big newsletters then
+          the sending stops after the time specified in "max execution time" the
+          screen is refreshed with status information and posting continues
+          after some time (be patient). After all newsletters are sent you will
+          see the page with the list of all sent newsletters(you can find the
+          same information in a log).</p>
+        <p><br>
+        </p>
+        <p><strong>Handling timeouts (white screen)</strong></p>
+        <p><strong></strong>Sending a bulk mail can result in server timeout. It
+          is usually due to that not all emails may be sent before the server
+          times out. Especially if you send a large amounts of data in your
+          newsletters or if use a slow sever you will experience HTTP error 500.</p>
+        <p><br>
+        </p>
+        <p>Usually you will be able to continue to send newsletters simply by
+          pressing F5 to refresh the browser. If it does not help stop sending
+          and go back to your "Publish" screen. If you are still in the same
+          browser the "Restore" field will contain number for the last sent
+          newsletter. Change value of "max execution time" in your configuration
+          to something lower and push the "Publish" button again. Newsletter
+          resumes sending the subsequent newsletters. If "Restore" field is
+          empty then you will find the number of the last posted newsletter in
+          the log file. Enter this value in "Restore" filed and continue as
+          described above.</p>
+        <p><br>
+        </p>
+        <p>When restoring the sending the counter shows the total number of sent
+          emails.</p>
+        <p><br>
+        </p>
+        <p><strong>Multilanguage sites</strong></p>
+        <p><strong></strong>Create different subscription and newsletter pages
+          for each second language site and then newsletter will create
+          corresponding mailing lists. You may not use the same newsletters
+          names in different language files as they will use the same mailings
+          list.</p>
+        <p><br>
+        </p>
+        <p>Example:</p>
+        <p>"Subscribe Newsletter" + "Newsletter" on your main cmsimple page</p>
+        <p>"Subscribe Newsletter EN" + "Newsletter EN" on your 2lang page in
+          English</p>
+        <p>"Subscribe Newsletter FR" + "Newsletter FR" on your 2lang page in
+          French</p>
+        <p><br>
+        </p>
+        <p><strong>Updating subscribers list trough other plugins</strong></p>
+        <p><strong></strong>Newsletter contains external function that can be
+          accessed by other plugins. For instance signe for a membership and a
+          newsletter in the same form. To do that call the function
+          extern_AddSubscriberToList(" Newsletter_name", $email); included in
+          index.php of Newsletter plugin.</p>
+        <p><br>
+        </p>
+        <p>Form Mailer plugin includes function user_function() from where you
+          can call to Newsletter.</p>
+        <p><br>
+        </p>
+        <h2 id="compatibility">Compatibility</h2>
+        <p>The Newsletter plugin is tested with CMSimple_XH version 1.7 and php
+          version 7.4.</p>
+        <p>It was tested with more than 1000 real mail addresses and mails up to
+          2MB large. The Newsletter was successfully checked as HTML 4.01
+          Transitional and HTML 1.0 Transitional.</p>
+        <p><br>
+        </p>
+        <h2 id="history">History</h2>
+        <ul>
+          <li><strong>version 2.5.0</strong><br>
+            updated to CMSimple XH version 1.8<br>
+            update PHP Mailer to 6.9.3<br>
+            <strong></strong></li>
+          <li><strong>version 2.4.2</strong><br>
+            updated to CMSimple XH version 1.7</li>
+          <li><strong>version 2.4.1</strong><br>
+            minor bug fixes</li>
+          <li><strong>version 2.4.0</strong><br>
+            php 7 ready</li>
+          <li><strong>version 2.3.2</strong><br>
+            compatibility with CMSimple_XH version 1.6. Added recognition of
+            relative urls. It is not necessary to change editor setup to
+            absolute urls. changed log. Each shipment of newsletter is loged in
+            a separate file. Old logs are copied to files with a time stamps.
+            Until 5 copies are stored. The actual log file can be accessed
+            trough plugin admin. Copies are only accessible through ftp.</li>
+          <li><strong>version 2.3.1<br>
+            </strong>A minor bug fix in file admin.php. German translation by <a
+              href="https://www.bs-creations.ch/" target="_blank">b&amp;s
+              creations</a></li>
+          <li><strong>version 2.3.0<br>
+            </strong>Added optional selection of newsletter subscriptions from
+            the list of newsletters defined by administrator Added support for
+            {{ {PLUGIN:....}}} plugins call Optimization of success/error
+            notifications. PHPmailer updated to version 5.2.1</li>
+          <li><strong>version 2.2.1<br>
+            </strong>IE bug fix in admin php.</li>
+          <li><strong>version 2.2.0<br>
+            </strong>Added template for subscription and unsubscription
+            confirmation mail. released under Remove Link licens.</li>
+          <li><strong>version 2.1.3<br>
+            </strong>all calls to eregi replaced by stristr again</li>
+          <li><strong>version 2.1.2<br>
+            </strong>bug fix in syncronization of subscriber list and newsletter
+            sending. All removed eregi from before version 2.1.1 are
+            unfortunetly back again.</li>
+          <li><strong>version 2.1.1<br>
+            </strong>minor bug fix function eregi removed for comaptibility with
+            php 5.3 and higher.</li>
+          <li><strong>version 2.1.0</strong></li>
+          <li><strong></strong>added templates and extra input fields. Fixed bug
+            in unsubscribe function. Added link to newletter pageif the
+            newsletter is not readable Optimized to use with pd_scripting.
+            Changed: if charset is empty then cmsimple default codepage is used.
+            Changed: Newsletter attahcments are stored in CMSimple downloads
+            directory.</li>
+          <li><strong>version 2.0<br>
+            </strong>resolved compatibility issues with hi_pd_scripting plugin</li>
+          <li><strong>version 1.9</strong></li>
+          <li><strong></strong>Subscribers email address is passed to
+            subscription page through the unsubscribe link in the newsletters.</li>
+          <li><strong>version 1.8</strong><br>
+            added urlencoding of subscription string when "<span style="color: red;">mail
+              confirm subscription</span>" is set to "user".</li>
+          <li><strong>version 1.7<br>
+            </strong>minor bug fix. Some html line breaks moved to language
+            files. Dutch translation by svasti</li>
+          <li><strong>version 1.6<br>
+            </strong>added user confirmation of subscription (optional).</li>
+          <li><strong>version 1.5</strong><br>
+            bug fix (utf-8 correction of confirmation mail and encoding of
+            unsubscribe link by svasti.) German translation by svasti.</li>
+          <li><strong>version 1.4<br>
+            </strong>bug fix.</li>
+          <li><strong>version 1.3<br>
+            </strong>Unused CMSimple tags h4 and above can be used in newsletter
+            content. added definition of charset in plugin config. added class
+            newsletter_legend in plugin stylesheets.</li>
+          <li><strong>version 1.2<br>
+            </strong>bug fixes: absolute path to unsubscribe link and minor
+            fixes in text version of the Newsletter.</li>
+          <li><strong>version 1.1<br>
+            </strong>bug in absolute path corrected and path is urlencoded.
+            added sk translation by Tata.</li>
+          <li><strong>version 1.0</strong></li>
+        </ul>
+        <p><br>
+        </p>
+        <ul>
+        </ul>
+        <h2 id="knownproblems">Known problems</h2>
+        <p>Some mail servers destroys confirmation link when "mail confirm
+          subscription" is configured as user. See <a href="https://cmsimpleforum.com/viewtopic.php?f=12&amp;t=2457"
+            title="Forum" target="_blank">cmsimpleforum</a>.</p>
+        <p><br>
+        </p>
+        <h2>Future development</h2>
+        <ul>
+          <li>Rewrited mail confirmation to solve problems on servers that
+            destroy links.</li>
+          <li>east european languages gender dependence.</li>
+        </ul>
+        <p><br>
+        </p>
+        <ul>
+        </ul>
+        <ul>
+        </ul>
+        <h2>Acknowledgement</h2>
+        The inspiration to this plugin comes from geniz.<br>
+        Mailing facility is based on <a href="https://github.com/PHPMailer/PHPMailer"
+          target="_blank">PHPMailer</a>.<br>
+        Slovak translation by Tata.<br>
+        French translation by MicroVintage.<br>
+        German translation by <a href="https://www.bs-creations.ch/" target="_blank">b&amp;s
+          creations</a><br>
+        Dutch translation by bastingse and svasti<br>
+        <br>
+        <h2 id="disclaimer">Disclaimer</h2>
+        This CMSimple plugin is distributed in the hope that it will be useful -
+        without any warranty; without even the implied warranty of fitnes for a
+        particualr purpose.<br>
+        <p></p>
+        <hr>
+        <h2 id="lizenz">Copyright and License</h2>
+        <p>© simpleSolutions 2010-2018<br>
+          © 2025 <a href="https://www.cmsimple-xh.org/" target="_blank">The
+            CMSimple_XH Community</a> . <br>
+          Lizenz: <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GPLv3</a></p>
+      </article>
+      <nav id="nav">
+        <ul>
+          <li><a href="#">↑ to top ↑</a></li>
+          <li><a href="#terms">Terms of use</a></li>
+          <li><a href="#requirements">Requirements</a></li>
+          <li><a href="#installation">Installation</a></li>
+          <li><a href="#config">Configuration</a></li>
+          <li><a href="#howitworks">How it works</a></li>
+          <li><a href="#compatibility">Compatibility</a></li>
+          <li><a href="#history">History</a></li>
+          <li><a href="#knownproblems">Known problems</a></li>
+          <li><a href="#futuredevelopment">Future development</a></li>
+          <li><a href="#acknowledgement">Acknowledgement</a></li>
+          <li><a href="#disclaimer">Disclaimer</a></li>
+          <li><a href="#lizenz">License</a></li>
+        </ul>
+      </nav>
+    </div>
+  </body>
+</html>
