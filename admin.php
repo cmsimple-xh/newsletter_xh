@@ -383,7 +383,7 @@ foreach ($c as $i) {
   $newsletter_array = array_unique($newsletter_array);
   sort($newsletter_array);
   if ($newspage == '')
-    $newspage = $newsletter_array[0];
+    $newspage = isset($newsletter_array[0]) ? $newsletter_array[0] : '';
 
   if (($action != "") && (count($newsletter_array)>1) ) {
     $newsletter_t = '<fieldset><legend>' . $plugin_tx['newsletter']['mailing_list'] .
@@ -437,24 +437,67 @@ function newsletter_attachmentslist($attachment)
 
 function newsletter_adminSubscribers($c, $h, $l, $newsletter_submit, $newspage, $action)
 {
-  global $pth, $plugin, $plugin_cf, $plugin_tx, $tx, $sn;
+    global $pth, $plugin, $plugin_tx, $tx, $sn;
 
-  $newsletter_t = newsletter_mailinglist($c, $h, $l, $newspage, $action).'<br>';
+    $newsletter_t = newsletter_mailinglist($c, $h, $l, $newspage, $action)
+                  . '<br>';
 
-  if ($newsletter_submit != '' and $fh = @fopen($pth['folder']['plugins']."newsletter/data/subscribe_".rswu($newspage).".txt", "w"))
-  {
-      $subscribers=isset($_POST['subscribers']) ? $_POST['subscribers'] : $_GET['subscribers'];
-    if (fwrite($fh, $subscribers) || $subscribers=="")
-            $newsletter_t .= "<strong>File saved: ".$pth['folder']['plugins']."newsletter/data/subscribe_".rswu($newspage)."</strong><br />";
-        else    
-            $newsletter_t .= "Error, not saved: ";        
+    if ($newsletter_submit != ''
+    && $fh = @fopen($pth['folder']['plugins']
+           . 'newsletter/data/subscribe_'
+           . rswu($newspage)
+           . '.txt', 'w'))  {
+
+        $subscribers = isset($_POST['subscribers'])
+                        ? $_POST['subscribers']
+                        : $_GET['subscribers'];
+        if (fwrite($fh, $subscribers)
+        || $subscribers == '') {
+            $newsletter_t .= '<strong>File saved: '
+                           . $pth['folder']['plugins']
+                           . 'newsletter/data/subscribe_'
+                           . rswu($newspage)
+                           . '</strong><br>';
+        } else {
+            $newsletter_t .= 'Error, not saved: ';
+        }
     fclose($fh);
-  }
-  $newsletter_t .= $plugin_tx['newsletter']['recivercount'].":&nbsp;".newsletter_subscribersCount($pth['folder']['plugins'] . "newsletter/data/subscribe_".rswu($newspage).".txt")."<hr>".'<form action="'.$sn.'?'.$plugin.'&amp;admin=plugin_main&amp;action=subscribers&amp;submit=save&amp;nlp='.rswu($newspage).'" method="post">' . '<input type="submit" class="newsletter_submit" value="'.$tx['action']['save'].'">'.
-    '<textarea class="newsletter_textarea" name="subscribers">'.rmnl(file_get_contents($pth['folder']['plugins'] . "newsletter/data/subscribe_".rswu($newspage).".txt")) .
-    '</textarea>&nbsp;'.'<br>' . '<input type="hidden" name="news" value="'.$newspage.'">'.'</form>';
+    }
+    $newsletter_t .= $plugin_tx['newsletter']['recivercount']
+                   . ':&nbsp;'
+                   . newsletter_subscribersCount($pth['folder']['plugins']
+                   . 'newsletter/data/subscribe_'
+                   . rswu($newspage)
+                   . '.txt')
+                   . '<hr>'
+                   . '<form action="'
+                   . $sn
+                   . '?'
+                   . $plugin
+                   . '&amp;admin=plugin_main&amp;action=subscribers&amp;submit=save&amp;nlp='
+                   . rswu($newspage)
+                   . '" method="post">'
+                   . '<input type="submit" class="newsletter_submit" value="'
+                   . $tx['action']['save']
+                   . '">'
+                   . '<textarea class="newsletter_textarea" name="subscribers">'
+                   . (is_readable($pth['folder']['plugins']
+                   . 'newsletter/data/subscribe_'
+                   . rswu($newspage)
+                   . '.txt')
+                        ? rmnl(file_get_contents($pth['folder']['plugins']
+                        . 'newsletter/data/subscribe_'
+                        . rswu($newspage)
+                        . '.txt'))
+                        : '')
+                   . '</textarea>&nbsp;'
+                   . '<br>'
+                   . '<input type="hidden" name="news" value="'
+                   . $newspage
+                   . '">'
+                   . '</form>';
 
-  return $newsletter_t;
+    return $newsletter_t;
 } // END - adminSubscribers
 
 function newsletter_template_file($pth,$plugin,$sl,$newspage,&$newsletter_template_file){
@@ -583,10 +626,12 @@ function newsletter_adminLog($c, $h, $l, $newsletter_submit, $newspage, $action)
 
 function newsletter_subscribersCount($f)
 {
-    $count=0;    
-    $fc=file($f);
-    foreach($fc as $line) {
-        ++$count;
+    $count=0;
+    if (is_readable($f)) {
+        $fc=file($f);
+        foreach($fc as $line) {
+            ++$count;
+        }
     }
     return $count;
 }
@@ -610,22 +655,26 @@ function newsletter_headpath($h, $l, $page)
   }
 }
 
-function newsletter_copy_logfile($logfile, $nln)
-{
+function newsletter_copy_logfile($logfile, $nln) {
+
     $arr = array();
     $numofcopies = 3;
-    $res=rename($logfile.$nln.".txt", $logfile.$nln."_".date('YmdHi').".txt");
-    foreach (glob($logfile.$nln."_*.txt") as $filename) {
-    $arr[]= $filename;
+    if (is_writable($logfile . $nln . '.txt')) {
+        $res = rename($logfile . $nln . '.txt',
+                      $logfile . $nln . '_' . date('YmdHi') . '.txt');
+    }
+    foreach (glob($logfile . $nln . '_*.txt') as $filename) {
+        $arr[] = $filename;
     }
     sort($arr);
     // delete excess copies
     if (count($arr) > $numofcopies) {
-        for ($i=0; $i<count($arr)-$numofcopies; $i++) {
-            unlink($arr[$i]);            
-        }    
+        for ($i=0; $i < count($arr) - $numofcopies; $i++) {
+            unlink($arr[$i]);
+        }
     }
 }
+
 if (function_exists('XH_registerStandardPluginMenuItems')) {
-  XH_registerStandardPluginMenuItems(true);
+    XH_registerStandardPluginMenuItems(true);
 }
