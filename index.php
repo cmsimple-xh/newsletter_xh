@@ -222,10 +222,11 @@ function newsletter_confirmation($newspages, $newspage_list, $subscribermail, $s
 
 
 function newsletter_create_form($newspage_list, $subscribermail, $subscriberfield, $newspages) {
+
     global $plugin_tx, $plugin_cf, $sn, $su, $hjs, $onload;
-    
-    $o="";
-    $onload.='getFocus()';
+
+    $o = '';
+    $onload .= 'getFocus()';
     $hjs .= '<script type="text/javascript">
     /* <![CDATA[ */
     function getFocus() { 
@@ -298,34 +299,86 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
     return true; 
     }
     /* ]]> */
-</script>
-    ';
-    $o.='<form name="subscribe" id="subscribe" method="post" action="'.$sn.'?'.$su.'" onsubmit=""><div id="err">&nbsp;</div>';
+</script>';
+    $o .= "\n"
+        . '<form name="subscribe" id="subscribe" method="post" action="'
+        . $sn
+        . '?'
+        . $su
+        . '" onsubmit="">'
+        . "\n"
+        . '<div id="err">&nbsp;</div>';
     if (isset($_GET['uns'])) {
-        $o.='<select name="adddel" id="addel"  style="visibility:hidden"><option>'.$plugin_tx['newsletter']['subscribe'].'</option>';
-        $o.='<option selected>'.$plugin_tx['newsletter']['unsubscribe'].'</option></select>';
+        $o .= '<select name="adddel" id="addel" style="visibility:hidden">'
+            . "\n"
+            . '<option>'
+            . $plugin_tx['newsletter']['subscribe']
+            . '</option>'
+            . "\n";
+        $o .= '<option selected>'
+            . $plugin_tx['newsletter']['unsubscribe']
+            . '</option>'
+            . "\n"
+            . '</select>'
+            . "\n";
+    } else {
+        $o .= '<span class="newsletter_label">&nbsp;</span>'
+            . "\n"
+            . '<select name="adddel" id="addel" onchange="hideFields(this);">'
+            . "\n"
+            . '<option>'
+            . $plugin_tx['newsletter']['subscribe']
+            .'</option>'
+            . "\n";
+        $o .= '<option>'
+            . "\n"
+            . $plugin_tx['newsletter']['unsubscribe']
+            . '</option>'
+            . "\n"
+            . '</select>'
+            . "\n";
     }
-    else { 
-        $o.='<span class="newsletter_label">&nbsp;</span><select name="adddel" id="addel" onchange="hideFields(this);"><option>'.$plugin_tx['newsletter']['subscribe'].'</option>';
-        $o.='<option>'.$plugin_tx['newsletter']['unsubscribe'].'</option></select>';
+
+    $o .= '<br>'
+        . '<span class="newsletter_label">'
+        . $plugin_tx['newsletter']['subscriber_email_label']
+        . ':&nbsp;</span>'
+        . '<input name="subscribermail" id="subscribermail" type="text" class="newsletter_inputfield" value="'
+        . (isset($_GET['uns'])
+            ? newsleter_convert($_GET['uns'], 0)
+            : $subscribermail)
+        . '" onblur="newsletter_ValidEmail(document.subscribe);">'
+        . '<br>'
+        . "\n";
+    $mandatory = (trim($plugin_tx['newsletter']['subscriber_fields_mandatory']) != '');
+    if (!isset($_GET['uns'])
+    && trim($plugin_tx['newsletter']['subscriber_fields_label']) != '') {
+        $labels = explode(trim($plugin_tx['newsletter']['subscriber_fields_delimiter']),
+                          $plugin_tx['newsletter']['subscriber_fields_label']);
+        $user_input = '';
+        for ($i = 0; $i < sizeof($labels); $i++) {
+            $user_input .= '<span class="newsletter_label">'
+                         . trim($labels[$i])
+                         . ':&nbsp;</span><input name="'
+                         . rswu(trim($labels[$i]))
+                         . '" id="'
+                         . rswu(trim($labels[$i]))
+                         . '" type="text" class="newsletter_inputfield" value="'
+                         . $subscriberfield[$i]
+                         . ($mandatory
+                            ? '" onblur="newsletter_EmptyField(this);"'
+                            : '">')
+                         . '<br>'
+                         . "\n";
+        }
     }
-    
-    $o.="<br>".'<span class="newsletter_label">'.$plugin_tx['newsletter']['subscriber_email_label'].':&nbsp;</span>'.'<input name="subscribermail" id="subscribermail" type="text" class="newsletter_inputfield" value="'.(isset($_GET['uns']) ? newsleter_convert($_GET['uns'],0) :             $subscribermail).'" onblur="newsletter_ValidEmail(document.subscribe);">';
-    $mandatory = (trim($plugin_tx['newsletter']['subscriber_fields_mandatory']) != "");
-    if (!isset($_GET['uns']) && trim($plugin_tx['newsletter']['subscriber_fields_label'])!="") {
-        $labels=explode(trim($plugin_tx['newsletter']['subscriber_fields_delimiter']),$plugin_tx['newsletter']['subscriber_fields_label']);
-        $user_input="";
-        for ($i=0; $i<sizeof($labels); $i++) {
-            $user_input .= '<span class="newsletter_label">'. trim($labels[$i]).':&nbsp;</span>'.'<input name="'.rswu(trim($labels[$i])).'" id="'.rswu(trim($labels[$i])).'" type="text" class="newsletter_inputfield" value="'.$subscriberfield[$i].($mandatory?'" onblur="newsletter_EmptyField(this);"':'">');
-        }    
-    }        
 
     if (!isset($_GET['uns'])) {
         $o .= '<div id="userinput">';
         $o .= $user_input;
         $o .= '</div>';
     }    
-    $o .= '<br>';
+    $o .= '<br>' . "\n";
 
     $newspage_arr = explode(',', $newspage_list);
     if (count($newspage_arr) > 1) {
@@ -342,6 +395,7 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
                 }
             }
             $o.= '<br>'
+               . "\n"
                . '<span class="newsletter_label">'
                . trim($np)
                . ':&nbsp;</span>'
@@ -349,7 +403,8 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
                . ($checked
                     ? 'checked="yes"'
                     : ' value="'.rswu(trim($np)) . '"')
-               . '>';
+               . '>'
+               . "\n";
         }
         $o .=' <br>';
     } else {
@@ -361,9 +416,11 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
     }
     $o .= '<br>'
         . '<span class="newsletter_label"></span>'
+        . "\n"
         . '<input type="submit" class="submit" value="'
         . $plugin_tx['newsletter']['send']
         . '">'
+        . "\n"
         . '</form>';
 
     return $o;
