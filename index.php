@@ -367,8 +367,8 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
                          . $subscriberfield[$i]
                          . ($mandatory
                             ? '" onblur="newsletter_EmptyField(this);"'
-                            : '">')
-                         . '<br>'
+                            : '"')
+                         . '><br>'
                          . "\n";
         }
     }
