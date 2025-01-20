@@ -76,21 +76,22 @@ if (isset($_GET['newsletter'])) {
       $newspage=str_replace("_"," ",$newspage);
   }
   if ($admin == 'plugin_main') {
-    $newsletter_t.='<table class="edit" width="100%" cellpadding="1" cellspacing="0" border="1"><tr>';
-    $newsletter_t.='<td><a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=publish'.'&amp;nlp='.rswu($newspage).'">';
-      $newsletter_t .= $plugin_tx['newsletter']['publish'].'</a></td>';
-      $newsletter_t .= '<td><a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=subscribers'.'&amp;nlp=';
+    $newsletter_t .= '<div id="newsletter-publish">';
+    $newsletter_t .= '<table class="edit" width="100%" cellpadding="1" cellspacing="0" border="1"><tr>';
+    $newsletter_t .= '<td><a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=publish'.'&amp;nlp='.rswu($newspage).'">';
+    $newsletter_t .= $plugin_tx['newsletter']['publish'].'</a></td>';
+    $newsletter_t .= '<td><a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=subscribers'.'&amp;nlp=';
     $newsletter_t .= rswu($newspage) . '">' . $plugin_tx['newsletter']['admin_subscribers'];
-    $newsletter_t.='</a></td><td>  <a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=template'.'&amp;nlp=';
+    $newsletter_t .= '</a></td><td>  <a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=template'.'&amp;nlp=';
     $newsletter_t .= rswu($newspage) . '">' . $plugin_tx['newsletter']['admin_template'];
     if ($plugin_cf['newsletter']['mail_confirm_subscribtion']!="no" ||     $plugin_cf['newsletter']['mail_confirm_unsubscribtion']!="no"){
-        $newsletter_t.='</a></td><td>  <a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=confirm'.'&amp;nlp=';
-      $newsletter_t .= rswu($newspage) . '">' . $plugin_tx['newsletter']['admin_confirmation_template'];
-      }    
-    $newsletter_t.='</a></td><td>  <a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=log'.'&amp;nlp=';
+        $newsletter_t .= '</a></td><td>  <a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=confirm'.'&amp;nlp=';
+        $newsletter_t .= rswu($newspage) . '">' . $plugin_tx['newsletter']['admin_confirmation_template'];
+    }
+    $newsletter_t .= '</a></td><td>  <a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=log'.'&amp;nlp=';
     $newsletter_t .= rswu($newspage) . '">' . $plugin_tx['newsletter']['admin_log'];
     $newsletter_t .= '</a></td></tr></table>';
-    $newsletter_t.=newsletter_template_file($pth,$plugin,$sl,$newspage,$newsletter_template_file);
+    $newsletter_t .= newsletter_template_file($pth,$plugin,$sl,$newspage,$newsletter_template_file);
     $template=file_get_contents($newsletter_template_file);
     if ($action == 'publish') {
       if (trim($newsletter_adminmail) == "")
@@ -378,8 +379,9 @@ if (isset($_GET['newsletter'])) {
           }
       } 
   } // END - ADMIN
+  $newsletter_t .= '</div>';
   $o .= $newsletter_t;
-  $o.="\n<!--Newsletter plugin end-->\n";
+  $o .= "\n<!--Newsletter plugin end-->\n";
 }
 // END - newsletter
 
