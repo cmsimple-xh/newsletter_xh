@@ -129,33 +129,90 @@ if (isset($_GET['newsletter'])) {
                  $template_preview_send=preg_replace('/\{TEXTFIELD_'.($i+1).'\}/','['.trim($labels[$i]).']',$template_preview_send);
               }
           }
-          // preview or test submitted
-      if ($newsletter_submit == '' || $newsletter_test != '') {
-          $checked=' checked="checked"';
-          if ($restart>0) $checked=""; 
-        $newsletter_t .= 
-              '<form name="newsmail" action="'.$sn.'?'.$plugin.'&amp;admin=plugin_main&amp;action=publish&amp;submit=sendmail&amp;nlp='.rswu($newspage).'" method="post">' 
-              .'<table border="0">'
-              .'<tr><td width="200px">'
-              .'<a href="#" class="pl_tooltip"><img src = "'.(isset($pth['folder']['corestyle'])?$pth['folder']['corestyle']:$pth['folder']['plugins'].'pluginloader/css/').'help_icon.png" alt="" class="helpicon" /> &nbsp;<span>'.$plugin_tx[$plugin]['adm_newsletter_subject'].'</span></a>'
-              .$plugin_tx['newsletter']['subject'].'</td>'
-              .'<td>'.'<input name="subject" type="text" size="50%" value="' . $newsletter_subject .'">'.'</td></tr>' 
-              .'<tr><td>'
-              .'<a href="#" class="pl_tooltip"><img src = "'.(isset($pth['folder']['corestyle'])?$pth['folder']['corestyle']:$pth['folder']['plugins'].'pluginloader/css/').'help_icon.png" alt="" class="helpicon" /> &nbsp;<span>'.$plugin_tx[$plugin]['adm_newsletter_attachment'].'</span></a>'
-              .$plugin_tx['newsletter']['attachment'].':&nbsp;</td>'
-              .'<td>'.newsletter_attachmentslist($newsletter_attachment).'</td></tr>';
-              $newsletter_t .='<tr><td>'
-                  .'<a href="#" class="pl_tooltip"><img src = "'.(isset($pth['folder']['corestyle'])?$pth['folder']['corestyle']:$pth['folder']['plugins'].'pluginloader/css/').'help_icon.png" alt="" class="helpicon" /> &nbsp;<span>'.$plugin_tx[$plugin]['adm_newsletter_restore'].'</span></a>'
-                  .$plugin_tx['newsletter']['restart'].': </td><td>'.'<input name="restart" type="text" size="5" value="'.$restart.'" onchange="if (document.newsmail.restart.value.search(/^\d*$/)==-1) { document.newsmail.restart.style.backgroundColor='.'\'#FFE9E8\''.'; alert('.'\'Number only, please.\''.'); } else {document.newsmail.restart.style.backgroundColor='.'\'#FFFFFF\''.';{if (document.newsmail.restart.value>0) {document.newsmail.test.checked=false;} else {document.newsmail.test.checked=true;}}}">'
-               .'</td></tr>';
-              $newsletter_t .='<tr><td>'
-              .'<a href="#" class="pl_tooltip"><img src = "'.(isset($pth['folder']['corestyle'])?$pth['folder']['corestyle']:$pth['folder']['plugins'].'pluginloader/css/').'help_icon.png" alt="" class="helpicon" /> &nbsp;<span>'.$plugin_tx[$plugin]['adm_newsletter_sendto'].'</span></a>'
-              .'<input type="checkbox" name="test"'.$checked.'>&nbsp;'. $plugin_tx['newsletter']['test_mail'].'</td>'
-                  .'<td>'.'<input name="adminmail" type="text" size="50%" value="'.$newsletter_adminmail.'">'.'</td></tr>';
-              $newsletter_t .='<tr><td colspan="2">'."<br>".'<input type="submit" class="submit" value="'.$plugin_tx['newsletter']['publish'].'">'.'</td></tr>'
-              .'<tr><td colspan="2">'."<br>".'</td></tr>'
-              .'</table>'.'</form>';
-      }
+            // preview or test submitted
+            if ($newsletter_submit == '' || $newsletter_test != '') {
+                $checked=' checked="checked"';
+                if ($restart > 0) $checked = '';
+                $newsletter_t .= '<form name="newsmail" action="'
+                               . $sn
+                               . '?'
+                               . $plugin
+                               . '&amp;admin=plugin_main&amp;action=publish&amp;submit=sendmail&amp;nlp='
+                               . rswu($newspage)
+                               . '" method="post">'
+                               . "\n";
+                $newsletter_t .= '<table border="0">'
+                               . "\n"
+                               . '<tr>'
+                               . "\n"
+                               . '<td width="200px">'
+                               . "\n"
+                               . '<div class="pl_tooltip"><img src = "'
+                               . $pth['folder']['corestyle']
+                               . 'help_icon.svg" alt="" class="helpicon">'
+                               . '<div>'
+                               . $plugin_tx[$plugin]['adm_newsletter_subject']
+                               . '</div></div>'
+                               . $plugin_tx['newsletter']['subject']
+                               . '</td>' . "\n" .'<td>'
+                               . '<input name="subject" type="text" size="50%" value="'
+                               . $newsletter_subject
+                               . '">'
+                               . '</td>' . "\n" . '</tr>' . "\n";
+                $newsletter_t .= '<tr>' . "\n" . '<td>'
+                               . '<div class="pl_tooltip"><img src = "'
+                               . $pth['folder']['corestyle']
+                               . 'help_icon.svg" alt="" class="helpicon">'
+                               . '<div>'
+                               . $plugin_tx[$plugin]['adm_newsletter_attachment']
+                               . '</div></div>'
+                               . $plugin_tx['newsletter']['attachment']
+                               . '</td>' . "\n" .'<td>'
+                               . newsletter_attachmentslist($newsletter_attachment)
+                               . '</td>' . "\n" . '</tr>' . "\n";
+                $newsletter_t .= '<tr>' . "\n" . '<td>'
+                               . '<div class="pl_tooltip"><img src = "'
+                               . $pth['folder']['corestyle']
+                               . 'help_icon.svg" alt="" class="helpicon">'
+                               . '<div>'
+                               . $plugin_tx[$plugin]['adm_newsletter_restore']
+                               . '</div></div>'
+                               . $plugin_tx['newsletter']['restart']
+                               . ': </td>' . "\n" .'<td>'
+                               . '<input name="restart" type="text" size="5" value="'
+                               . $restart
+                               . '" onchange="if (document.newsmail.restart.value.search(/^\d*$/)==-1)'
+                               . ' { document.newsmail.restart.style.backgroundColor='
+                               . '\'#FFE9E8\''
+                               . '; alert('
+                               . '\'Number only, please.\''
+                               . '); } else {document.newsmail.restart.style.backgroundColor='
+                               . '\'#FFFFFF\''
+                               . ';{if (document.newsmail.restart.value>0) {document.newsmail.test.checked=false;}'
+                               . ' else {document.newsmail.test.checked=true;}}}">'
+                               . '</td>' . "\n" . '</tr>' . "\n";
+                $newsletter_t .= '<tr>' . "\n" . '<td>'
+                               . '<div class="pl_tooltip"><img src = "'
+                               .  $pth['folder']['corestyle']
+                               . 'help_icon.svg" alt="" class="helpicon">'
+                               . '<div>'
+                               . $plugin_tx[$plugin]['adm_newsletter_sendto']
+                               . '</div></div>'
+                               . '<input type="checkbox" name="test"'
+                               . $checked
+                               . '>&nbsp;'
+                               . $plugin_tx['newsletter']['test_mail']
+                               . '</td>' . "\n" .'<td>'
+                               . '<input name="adminmail" type="text" size="50%" value="'
+                               . $newsletter_adminmail.'">'
+                               . '</td>' . "\n" . '</tr>' . "\n";
+                $newsletter_t .= '<tr>' . "\n" . '<td colspan="2">'
+                               . '<input type="submit" class="submit" value="'
+                               . $plugin_tx['newsletter']['publish']
+                               . '">'
+                               . '</td>' . "\n" . '</tr>' . "\n"
+                               . '</table>' . "\n" . '</form>' . "\n";
+            }
       $_SESSION['NEWSLETTER']['MailFrom'] = (trim($plugin_cf['newsletter']['from']) == "") ? $cf['mailform']['email'] : $plugin_cf['newsletter']['from'];
       
       $_SESSION['NEWSLETTER']['MailFromName'] = (trim($plugin_cf['newsletter']['from_name']) == "")? $tx['site']['title']:$plugin_cf['newsletter']['from_name'];
