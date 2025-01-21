@@ -1,10 +1,5 @@
 <?php
 
-$plugin_tx['newsletter']['menu_main'] = "Info / Verschicken";
-
-$plugin_tx['newsletter']['admin_gplv3_1'] = "kann unter Einhaltung der";
-$plugin_tx['newsletter']['admin_gplv3_2'] = "verwendet werden.";
-
 $plugin_tx['newsletter']['publish']="Verschicken";
 $plugin_tx['newsletter']['admin_subscribers']="Mailing Listen";
 $plugin_tx['newsletter']['admin_log']="Log";

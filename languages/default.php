@@ -1,10 +1,5 @@
 <?php
 
-$plugin_tx['newsletter']['menu_main'] = "Info / Publish";
-
-$plugin_tx['newsletter']['admin_gplv3_1'] = "can be used in compliance with";
-$plugin_tx['newsletter']['admin_gplv3_2'] = ".";
-
 $plugin_tx['newsletter']['publish']="Publish";
 $plugin_tx['newsletter']['admin_subscribers']="Mailing lists";
 $plugin_tx['newsletter']['admin_log']="Log";
