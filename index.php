@@ -394,25 +394,27 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
                     $checked = true;
                 }
             }
-            $o.= '<br>'
-               . "\n"
-               . '<span class="newsletter_label">'
-               . trim($np)
-               . ':&nbsp;</span>'
-               . '<input name="news_page[]" type="checkbox"'
-               . ($checked
-                    ? 'checked="yes"'
-                    : ' value="'.rswu(trim($np)) . '"')
-               . '>'
-               . "\n";
+            $o .= '<br>'
+                . "\n"
+                . '<span class="newsletter_label">'
+                . trim($np)
+                . ':&nbsp;</span>'
+                . '<input name="news_page[]" type="checkbox"'
+                . ($checked
+                    ? ' checked="yes"'
+                    : '')
+                . ' value="'
+                . rswu(trim($np))
+                . '">'
+                . "\n";
         }
-        $o .=' <br>';
+        $o .='<br>';
     } else {
         // singel newsletter subscribe
         $o .= '<input name="single_newspage" type="hidden" value="'
             . rswu($newspage_list)
             . '">'
-            .'&nbsp;';
+            . '&nbsp;';
     }
     $o .= '<br>'
         . '<span class="newsletter_label"></span>'
