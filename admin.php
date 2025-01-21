@@ -16,12 +16,15 @@
  * @license    GNU GPLv3 - http://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
+require($pth['folder']['plugins'] . 'newsletter/includes/nladminfuncs.php');
+
 // PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-if (isset($_GET['newsletter'])) {
+//if (isset($_GET['newsletter'])) {
+if (XH_wantsPluginAdministration('newsletter')) {
 
     if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
         include_once __DIR__ . '/phpmailer/PHPMailer.php';
@@ -41,7 +44,6 @@ if (isset($_GET['newsletter'])) {
   $admin = isset($_POST['admin']) ? $_POST['admin'] : (isset($_GET['admin'])?$_GET['admin']:"");
   $action = isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action'])?$_GET['action']:"");
   $plugin = basename(dirname(__file__), "/");
-  $o='<h1>Newsletter_XH</h1>';
   $newsletter_adminmail = isset($_POST['adminmail']) ? $_POST['adminmail'] : (isset($_GET['adminmail'])?$_GET['adminmail']:"");//$_GET['adminmail'];
   $newsletter_subject = isset($_POST['subject']) ? $_POST['subject'] : (isset($_GET['subject'])?$_GET['subject']:"");//$_GET['subject'];
   $newspage = isset($_POST['nlp']) ? $_POST['nlp'] : (isset($_GET['nlp'])?$_GET['nlp']:"");//$_GET['nlp'];
@@ -51,31 +53,20 @@ if (isset($_GET['newsletter'])) {
   $newsletter_attachment = isset($_POST['attachment']) ? $_POST['attachment'] : (isset($_GET['attachment'])?$_GET['attachment']:"");//$_GET['attachment'];
   $restart = (isset($_POST['restart']) ? $_POST['restart'] : (isset($_SESSION['NEWSLETTER']['MailCount'])? $_SESSION['NEWSLETTER']['MailCount']: null));
 
-  // admin menu
-  $newsletter_t = print_plugin_admin('on');
-  if ($admin <> 'plugin_main') {
-    $newsletter_t .= plugin_admin_common($action, $admin, $plugin);
-      if ($admin==null) {
-          if(!is_writable($pth['folder']['plugins'].$plugin."/config/config.php")) {
-              $newsletter_t .="<br>Warning : config.php not writable, please change permissions<br>";
-          }        
-          if(!is_writable($pth['folder']['plugins'].$plugin."/css/stylesheet.css")) {
-              $newsletter_t .="<br>Warning : stylesheet.css not writable, please change permissions<br>";
-          }
-          if(!is_writable($pth['folder']['plugins'].$plugin."/languages/".$sl.".php")) {
-              $newsletter_t .="<br>Warning : ".$sl.".php not writable, please change permissions<br>";
-          }
-          $newsletter_t .= $plugin_tx['newsletter']['terms_of_use'];
-      }
-  }
-  
+    // admin menu
+    $o .= print_plugin_admin('on');
+    if(($admin != 'plugin_main') && ($admin != '')) {
+        $o .= plugin_admin_common($action, $admin, $plugin);
+    }
+
   if ($newspage=="") {
       newsletter_mailinglist($c, $h, $l, $newspage, ""); //preset $newspage (activ mailing list)
   }
   else {
       $newspage=str_replace("_"," ",$newspage);
   }
-  if ($admin == 'plugin_main') {
+    $newsletter_t = '';
+  if ($admin == '' || $admin == 'plugin_main') {
     $newsletter_t .= '<div id="newsletter-publish">';
     $newsletter_t .= '<table class="edit" width="100%" cellpadding="1" cellspacing="0" border="1"><tr>';
     $newsletter_t .= '<td><a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=publish'.'&amp;nlp='.rswu($newspage).'">';
@@ -91,6 +82,7 @@ if (isset($_GET['newsletter'])) {
     $newsletter_t .= '</a></td><td>  <a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=log'.'&amp;nlp=';
     $newsletter_t .= rswu($newspage) . '">' . $plugin_tx['newsletter']['admin_log'];
     $newsletter_t .= '</a></td></tr></table>';
+    
     $newsletter_t .= newsletter_template_file($pth,$plugin,$sl,$newspage,$newsletter_template_file);
     $template=file_get_contents($newsletter_template_file);
     if ($action == 'publish') {
@@ -378,8 +370,45 @@ if (isset($_GET['newsletter'])) {
                   break;
           }
       } 
-  } // END - ADMIN
-  $newsletter_t .= '</div>';
+        $newsletter_t .= '</div>';
+  }
+
+    // Checks system requirements
+    if (($admin == '' || $admin == 'plugin_main')
+    && $action != 'publish'
+    && $action != 'subscribers'
+    && $action != 'template'
+    && $action != 'confirm'
+    && $action != 'log') {
+        //$newsletter_t .= plugin_admin_common($action, $admin, $plugin);
+        //**************************************************************************
+        $nl_pluginName = 'Newsletter_XH';
+        $nl_pluginVersion = '2.5.0';
+        $nl_copyright = '2025';
+        $nl_cmsVersionArray = array('1.7.0', 'and higher');
+        $nl_phpVersion = '7.4';
+        //**************************************************************************
+        $newsletter_t .= '<div class="newsletterxh_admin">' . "\n";
+        $newsletter_t .= '<h1>' . $nl_pluginName . '</h1>' . "\n";
+        $newsletter_t .= '<p>' . $nl_pluginName . ' Version: '
+                       . $nl_pluginVersion . '<br>' . "\n";
+        $newsletter_t .= '© 2025 <a target="_blank"'
+                       . ' href="https://www.cmsimple-xh.org/?About-CMSimple_XH/The-XH-Team">'
+                       . 'The CMSimple_XH developers</a></p>' . "\n";
+        $newsletter_t .= '<p>'
+                       . $nl_pluginName
+                       . ' '
+                       . $plugin_tx['newsletter']['admin_gplv3_1']
+                       . ' <a target="_blank" href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPLv3</a> '
+                       . $plugin_tx['newsletter']['admin_gplv3_2']
+                       . '</p>'
+                       . "\n";
+        $newsletter_t .= '<hr>' . "\n";
+        $newsletter_t .= newsletter_Systemcheck($nl_cmsVersionArray, $nl_phpVersion);
+        $newsletter_t .= '</div>' . "\n";
+    }
+    // END - ADMIN
+
   $o .= $newsletter_t;
   $o .= "\n<!--Newsletter plugin end-->\n";
 }
