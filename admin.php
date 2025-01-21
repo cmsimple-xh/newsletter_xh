@@ -724,23 +724,20 @@ function newsletter_subscribersCount($f)
     return $count;
 }
 
-function newsletter_headpath($h, $l, $page)
-{
-    global $cf;
-    
-     $pagearray=array();
-    $count=0;
-    $tmp="";
-  foreach ($h as $i) {
-      $pagearray[$l[$count]]=$h[$count];
-        if ($i==$page) {
-            for($n=1; $n<$l[$count]; $n++) {
-                $tmp.=urlencode(preg_replace('/ /','_',$pagearray[$n])).$cf['uri']['seperator'];
-            }
-            return $_SESSION['NEWSLETTER']['NewsletterPath']."?".$tmp.urlencode(preg_replace('/ /',$cf['uri']['word_separator'],$page));
-        }    
-    ++$count;
-  }
+function newsletter_headpath($h, $l, $page) {
+
+    global $cf, $cl, $u;
+
+    $o = '';
+    for ($i = 0; $i < $cl; $i++) {
+        if ($h[$i] == $page) {
+            $o = $_SESSION['NEWSLETTER']['NewsletterPath']
+               . '?'
+               . $u[$i];
+        break;
+        }
+    }
+    return $o;
 }
 
 function newsletter_copy_logfile($logfile, $nln) {
