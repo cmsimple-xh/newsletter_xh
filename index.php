@@ -323,7 +323,7 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
             . "\n";
     } else {
         $o .= '<span class="newsletter_label">&nbsp;</span>'
-            . "\n"
+            //. "\n"
             . '<select name="adddel" id="addel" onchange="hideFields(this);">'
             . "\n"
             . '<option>'
