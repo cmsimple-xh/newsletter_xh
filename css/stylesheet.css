@@ -1,96 +1,82 @@
 .newsletter_code {
-	background-color: #FAFAFA; 
-	border: #D1D7DC;
-	width: 600px; 
-	border-style: solid;
-	border-left-width: 1px; 
-	border-top-width: 1px; 
-	border-right-width: 1px; 
-	border-bottom-width: 1px;
-	padding: 20px;
+    background-color: #FAFAFA; 
+    border: 1px solid #D1D7DC;
+    padding: 20px;
+    width: 100%; 
 }
-.newsletter_subscribe_errmsg {
-	background-color: #FFAEAE; 
-	color: maroon;
-	width: 90%;
-	border: solid 4px gray;
-	margin: 3%;	
-	padding: 10px;
-	border-radius:8px;
-	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
-	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.35);
+.newsletter_subscribe_errmsg,
+.newsletter_subscribe_ok {
+    background-color: #FFAEAE;
+    color: maroon;
+    width: 100%;
+    border: solid 4px gray;
+    margin: 0 auto 0.5em;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
 }
 .newsletter_subscribe_ok {
-	background-color: #B0E57C; 
-	color: #004000;
-	width: 90%;
-	border: solid 4px gray;
-	margin: 3%;	
-	padding: 10px;
-	border-radius:8px;
-	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
-	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.35);
+    background-color: #B0E57C; 
+    color: #004000;
 }
-
 .newsleter_fieldset {
-	padding:10px;
+    padding: 10px;
 }
 .newsleter_legend {
-	color: gray;
-}	
+    color: gray;
+}
 .newsletter_label {
-	width: 120px;
-	display:inline-block;
+    margin: 0;
+    width: 120px;
+    display: inline-block;
+}
+.newsletter_label:has(+ input[name^="news_page"]) {
+    margin: 0 1em 0 0;
+    width: auto;
 }
 .newsletter_inputfield {
-	width: 400px;
+    margin: 0.2em 0;
+    width: calc(100% - 130px);
 }
 .newsletter_textarea {
-	width: 467px;
-	height: 320px;
-	border: 1px solid #aaa;
-	padding: 5px;
+    width: 100%;
+    height: 320px;
+    border: 1px solid #aaa;
+    padding: 5px;
 }
 .newsletter_submit {
-	height:30px;
-	width:100%;	
-	font-weight:bold;
-	font-size: 1.1em;
+    height: 30px;
+    width: 100%; 
+    font-weight: bold;
+    font-size: 1.1em;
 }
-#err {
-	color: red;
-	margin-left: 30px;
-	margin-bottom: 5px;
+.newsleter_fieldset #err {
+    color: red;
+}
+.newsleter_fieldset #err ~ #addel {
+    margin: 0.2em 0;
 }
 
-#newsletter_credits a:link a:visited {
-  
+/* Backend */
+#newsletter-publish form[name="newsmail"] input:not(form[name="newsmail"] input[type="checkbox"]),
+#newsletter-publish form[name="newsmail"] select {
+    margin: 0.5em 0 0;
+    width: 100%;
 }
-#newsletter_credits a:hover {
-  color:  red;
-  font-size: 12px;
-  font-weight: bold;
+#newsletter-publish form[name="newsmail"] table {
+    width: 100%;
 }
-/*
-PLEASE DO NOT CHANGE,
-unless you have purchased the Remote Link license.
-
-To remove the link add a line
-dispaly: none; to #newsletter_credits css below
-so it looks as follows
-  
-#newsletter_credits {
-display: none;
-font size: 10px;
-.......
+#newsletter-publish form[name="newsmail"] table tr td:nth-of-type(1) {
+    width: 200px;
 }
-You must also change the License to 
-"Remove Link" in the plugin configuration
-*/
-#newsletter_credits {
-	font-size: 10px;
-	text-align: right;
-	line-height: 11px;
-  padding-top:2px;
-	vertical-align: bottom;
+#newsletter-publish form[name="newsmail"] table tr td:nth-of-type(2) {
+    width: calc(100% - 200px);
+}
+#newsletter-publish fieldset:has(legend ~ img) {
+    padding: 0.5em 0.5em 1em;
+}
+#newsletter-publish fieldset legend ~ img {
+    padding: 0 0.25em 0 0;
+    vertical-align: middle;
 }
