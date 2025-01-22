@@ -1,15 +1,15 @@
 <?php
 
-$plugin_tx['newsletter']['menu_main'] = "Info / Verschicken";
+$plugin_tx['newsletter']['menu_main'] = "Info / Versenden";
 
 $plugin_tx['newsletter']['admin_gplv3_1'] = "kann unter Einhaltung der";
 $plugin_tx['newsletter']['admin_gplv3_2'] = "verwendet werden.";
 
-$plugin_tx['newsletter']['publish']="Verschicken";
-$plugin_tx['newsletter']['admin_subscribers']="Mailing Listen";
+$plugin_tx['newsletter']['publish']="Versenden";
+$plugin_tx['newsletter']['admin_subscribers']="Empfänger";
 $plugin_tx['newsletter']['admin_log']="Log";
-$plugin_tx['newsletter']['admin_template']="Template";
-$plugin_tx['newsletter']['admin_confirmation_template']="Bestätigung";
+$plugin_tx['newsletter']['admin_template']="Newsletter-Template";
+$plugin_tx['newsletter']['admin_confirmation_template']="Bestätigung-Template";
 $plugin_tx['newsletter']['mailing_list']="Mailing Liste";
 $plugin_tx['newsletter']['subscribe']="Abonnieren";
 $plugin_tx['newsletter']['subscribe_succes']="Vielen Dank.<br>Ihre Newsletter-Bestellung ist jetzt eingetragen.";
@@ -39,7 +39,7 @@ $plugin_tx['newsletter']['test_mail_sent']="Test-Newsletter gesendet an";
 $plugin_tx['newsletter']['test_mail_nosent']="Kein Test-Newsletter gesendet an";
 $plugin_tx['newsletter']['mnu_main']="Plugin Admin";
 $plugin_tx['newsletter']['restart']="Restart";
-$plugin_tx['newsletter']['sendinit']="<br>Das Verschicken des Newsletters beginnt automatisch. Bitte während des Sendens keine Tasten berühren:";
+$plugin_tx['newsletter']['sendinit']="<br>Das Versenden des Newsletters beginnt automatisch. Bitte während des Sendens keine Tasten berühren.";
 $plugin_tx['newsletter']['msg_sent']="Gesendet";
 $plugin_tx['newsletter']['msg_of']="von";
 $plugin_tx['newsletter']['msg_wait']="Sendepause...";
