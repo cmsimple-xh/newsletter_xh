@@ -189,35 +189,53 @@ function confirm_subscription()
 }
 
 function newsletter_confirmation($newspages, $newspage_list, $subscribermail, $subscriberfield) {
-    global $plugin_tx,$plugin_cf,$cf, $pth, $sn, $subscribe_confirmation_mail;
-//echo "newsletter_confirmation";    
-    $crform="";
-    $subscribe="";
-    if (newsletter_verify_email($subscribermail) && newsletter_verify_fields($subscriberfield)) {
+
+    global $plugin_tx, $subscribe_confirmation_mail;
+
+    //echo "newsletter_confirmation";
+    $crform = '';
+    $subscribe = '';
+    if (newsletter_verify_email($subscribermail)
+    && newsletter_verify_fields($subscriberfield)) {
         foreach($newspages as $np) {
-            $subscriber_class ='newsletter_subscribe_ok';
-            $subscribe_confirmation_mail=""; //disable confirmation
-            $subscribe .= '<p>'.$np.": ".$plugin_tx['newsletter']['subscribe_confirm_text'].'</p>';
-            $confirm_str=$subscribermail;
-            for ($i=0; $i<sizeof($subscriberfield);$i++) {
-                $confirm_str.="@@@".($subscriberfield[$i]==""?" ":$subscriberfield[$i]);
+            $subscriber_class = 'newsletter_subscribe_ok';
+            //disable confirmation
+            $subscribe_confirmation_mail = '';
+            $subscribe .= '<p>'
+                        . $np
+                        . ': </p><p>'
+                        . $plugin_tx['newsletter']['subscribe_confirm_text']
+                        . '</p>';
+            $confirm_str = $subscribermail;
+            for ($i = 0; $i < sizeof($subscriberfield); $i++) {
+                $confirm_str .= "@@@" . ($subscriberfield[$i] == ''
+                                            ? ' '
+                                            : $subscriberfield[$i]);
             }
-            $confirm_str.="¤¤¤".$np; 
-            $confirm_str=newsleter_convert($confirm_str,1); //encrypt
-            /* $subscribe.=newsletter_subscription_mail($subscribermail, $plugin_tx['newsletter']['subscribe_confirm_subject'],$plugin_tx['newsletter']['subscribe_confirm'],'//'.$_SERVER['HTTP_HOST'].$sn."?newsletterconfirm&cnf=".$confirm_str); */ //& -> text based e-mail can't handle &amp;
-            $subscribe.=newsletter_subscription_mail($subscribermail, $plugin_tx['newsletter']['subscribe_confirm_subject'],$plugin_tx['newsletter']['subscribe_confirm'],CMSIMPLE_URL."?newsletterconfirm&cnf=".$confirm_str); //& -> text based e-mail can't handle &amp; // lck/Holger
+            $confirm_str .= '¤¤¤' . $np;
+            //encrypt
+            $confirm_str = newsleter_convert($confirm_str,1);
+            $subscribe .= newsletter_subscription_mail($subscribermail,
+                                                       $plugin_tx['newsletter']['subscribe_confirm_subject'],
+                                                       $plugin_tx['newsletter']['subscribe_confirm'],
+                                                       CMSIMPLE_URL . '?newsletterconfirm&cnf=' . $confirm_str);
+                                                       //& -> text based e-mail can't handle &amp; // lck/Holger
         }
+    } else {
+        if (!newsletter_verify_email($subscribermail))
+            $subscribe = '<p>' . $plugin_tx['newsletter']['mail_not_valid'] . '</p>';
+        if (!newsletter_verify_fields($subscriberfield)) {
+            $subscribe.= '<p>'.$plugin_tx['newsletter']['subscriber_fields_mandatory'].'</p>';
+        }
+        $subscriber_class = 'newsletter_subscribe_errmsg';
+        $crform .= newsletter_create_form($newspage_list,
+                                          $subscribermail,
+                                          $subscriberfield,
+                                          $newspages);
     }
-    else {
-        if (!newsletter_verify_email($subscribermail))        
-            $subscribe='<p>'.$plugin_tx['newsletter']['mail_not_valid'].'</p>';
-        if (!newsletter_verify_fields($subscriberfield))
-            $subscribe.= '<p>'.$plugin_tx['newsletter']['subscriber_fields_mandatory'].'</p>';    
-        $subscriber_class ='newsletter_subscribe_errmsg';
-        $crform.=newsletter_create_form($newspage_list, $subscribermail, $subscriberfield, $newspages);
-    }
-    $subscribe='<div class="'.$subscriber_class.'">'.$subscribe.'</div>'.$crform;
-    return $subscribe;    
+    $subscribe = '<div class="' . $subscriber_class . '">' . $subscribe . '</div>' . $crform;
+
+    return $subscribe;
 }
 
 
@@ -532,44 +550,66 @@ function newsletter_AddSubscriberToList($newspages, $subscribermail, $subscriber
     return $subscribe_msg;
 }
 
-function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfield ) {
-    global $plugin_tx,$plugin_cf,$pth;
-    
-    $removed_msg="<p>".$plugin_tx['newsletter']["subscription_for"].$subscribermail."</p>";
+function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfield) {
+
+    global $plugin_tx, $plugin_cf, $pth;
+
+    $removed_msg = '<p>'
+                 . $plugin_tx['newsletter']["subscription_for"]
+                 . $subscribermail
+                 . '</p>';
     if (newsletter_verify_email($subscribermail)) {
         foreach ($newspages as $np) {
-            
-            $removed = $np.": ".$subscribermail." ".$plugin_tx['newsletter']['unsubscribe_not_found'];
-            $subscriber_class ='newsletter_subscribe_errmsg';
-            $fc=file($pth['folder']['plugins']."newsletter/data/subscribe_".rswu($np).".txt");
-            if ($fh=fopen($pth['folder']['plugins']."newsletter/data/subscribe_".rswu($np).".txt", "w")) {
+            $removed = $np
+                     . ': '
+                     . $subscribermail
+                     . ' '
+                     . $plugin_tx['newsletter']['unsubscribe_not_found'];
+            $subscriber_class = 'newsletter_subscribe_errmsg';
+            $fc = file($pth['folder']['plugins']
+                . 'newsletter/data/subscribe_'
+                . rswu($np)
+                . '.txt');
+            if ($fh = fopen($pth['folder']['plugins']
+                         . 'newsletter/data/subscribe_'
+                         . rswu($np)
+                         . '.txt',
+                      'w')) {
                 foreach($fc as $line) {
-                    if (stripos($line,$subscribermail)===false) {
-                        fwrite($fh,$line);
-                    }
-                    else {
-                        $removed=$np.': '.$plugin_tx['newsletter']['unsubscribe_succes'];
-                        $subscriber_class ='newsletter_subscribe_ok';
-                        if (stristr($plugin_cf['newsletter']['mail_confirm_unsubscribtion'],"yes")) {
-                            newsletter_subscription_mail($subscribermail,$plugin_tx['newsletter']['unsubscribe_succes_subject'], $np.": ".$plugin_tx['newsletter']['unsubscribe_succes'],"");
+                    if (stripos($line, $subscribermail) === false) {
+                        fwrite($fh, $line);
+                    } else {
+                        $removed = $np
+                                 . ': '
+                                 . $plugin_tx['newsletter']['unsubscribe_succes'];
+                        $subscriber_class = 'newsletter_subscribe_ok';
+                        if (stristr($plugin_cf['newsletter']['mail_confirm_unsubscribtion'], 'yes')) {
+                            newsletter_subscription_mail($subscribermail,
+                                                         $plugin_tx['newsletter']['unsubscribe_succes_subject'],
+                                                         $np . ': ' . $plugin_tx['newsletter']['unsubscribe_succes'],
+                                                         '');
                         }
                     }
                 }    
                 fclose($fh);
             }
             else {
-                $removed.=" ".$plugin_tx['newsletter']['unsubscribe_fail'];
+                $removed .= ' ' . $plugin_tx['newsletter']['unsubscribe_fail'];
             }
-            $removed_msg.=$removed;
+            $removed_msg .= '<p>' . $removed . '</p>';
         }
     }
     else {
-        $removed_msg.=$plugin_tx['newsletter']['mail_not_valid'];
-        $subscriber_class ='newsletter_subscribe_errmsg';
+        $removed_msg .= $plugin_tx['newsletter']['mail_not_valid'];
+        $subscriber_class = 'newsletter_subscribe_errmsg';
     }
-    
-                        
-    $removed_msg='<div class="'.$subscriber_class.'">'.$removed_msg."<br>"."<br>".'</div>';
+
+    $removed_msg = '<div class="'
+                 . $subscriber_class
+                 . '">'
+                 . $removed_msg
+                 . '</div>';
+
     return $removed_msg;
 }
 
