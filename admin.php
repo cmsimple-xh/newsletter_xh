@@ -68,7 +68,7 @@ if (XH_wantsPluginAdministration('newsletter')) {
     $newsletter_t = '';
   if ($admin == '' || $admin == 'plugin_main') {
     $newsletter_t .= '<div id="newsletter-publish">';
-    $newsletter_t .= '<table class="edit" width="100%" cellpadding="1" cellspacing="0" border="1"><tr>';
+    $newsletter_t .= '<table class="edit" style="width: 100%;"><tr>';
     $newsletter_t .= '<td><a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=publish'.'&amp;nlp='.rswu($newspage).'">';
     $newsletter_t .= $plugin_tx['newsletter']['publish'].'</a></td>';
     $newsletter_t .= '<td><a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=subscribers'.'&amp;nlp=';
