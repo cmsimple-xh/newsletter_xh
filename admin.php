@@ -400,6 +400,12 @@ if (XH_wantsPluginAdministration('newsletter')) {
                        . ' href="https://www.cmsimple-xh.org/?About-CMSimple_XH/The-XH-Team">'
                        . 'The CMSimple_XH developers</a></p>' . "\n";
         $newsletter_t .= '<p>'
+                       . $plugin_tx['newsletter']['material_icons_1']
+                       . ' <a target="_blank" href="https://developers.google.com/fonts/docs/material_icons">Google Material Icons</a>. '
+                       . $plugin_tx['newsletter']['material_icons_2']
+                       . '</p>'
+                       . "\n";
+        $newsletter_t .= '<p>'
                        . $nl_pluginName
                        . ' '
                        . $plugin_tx['newsletter']['admin_gplv3_1']
@@ -477,29 +483,49 @@ foreach ($c as $i) {
   if ($newspage == '')
     $newspage = isset($newsletter_array[0]) ? $newsletter_array[0] : '';
 
-  if (($action != "") && (count($newsletter_array)>1) ) {
-    $newsletter_t = '<fieldset><legend>' . $plugin_tx['newsletter']['mailing_list'] .
-      ': </legend>';
-    $count=0;
-    foreach ($newsletter_array as $i) {
-      if ($i == $newspage) {
-        $newsletter_t .= '<img src="'.$pth['folder']['plugins'].$plugin.'/images/'.$plugin_cf['newsletter']['selected_img'].'" alt="selected" title="selected">'.$i."<br>";
-        $_SESSION['subscribe_page']=$subscribe_pages[$count]."&uns=1"; //& -> text based e-mail can't handle &amp;
-      }
-      else {
-        $newsletter_t .= '<img src="'.$pth['folder']['plugins'].$plugin.
-          '/images/transparent.png" alt="">'.'<a href="'.$sn.'?'.$plugin.
-          '&amp;admin=plugin_main&amp;action='.$action .'&amp;nlp='.rswu($i).'">'.$i.'</a>'.
-          "<br>";
-      }
-        ++$count;    
+    if (($action != '')
+    && (count($newsletter_array) > 1)) {
+        $newsletter_t = '<fieldset><legend>'
+                      . $plugin_tx['newsletter']['mailing_list']
+                      . ': </legend>';
+        $count = 0;
+        foreach ($newsletter_array as $i) {
+            if ($i == $newspage) {
+                $newsletter_t .= '<div class="newsletter_selected">'
+                               . '<img src="'
+                               . $pth['folder']['plugins']
+                               . $plugin
+                               . '/images/selected.svg'
+                               . '" alt="" title="selected">'
+                               . $i
+                               . '</div>';
+                $_SESSION['subscribe_page'] = $subscribe_pages[$count]
+                                            . '&uns=1'; //& -> text based e-mail can't handle &amp;
+            } else {
+                $newsletter_t .= '<img src="'
+                               . $pth['folder']['plugins']
+                               . $plugin
+                               . '/images/transparent.png" alt="">'.'<a href="'
+                               . $sn
+                               . '?'
+                               . $plugin
+                               . '&amp;admin=plugin_main&amp;action='
+                               . $action
+                               . '&amp;nlp='
+                               . rswu($i)
+                               . '">'
+                               . $i
+                               . '</a>'
+                               . '<br>';
+            }
+            ++$count;
+        }
+        $newsletter_t .= '</fieldset>';
+        //$newsletter_t .= "<hr>";
+        return $newsletter_t;
+    } else {
+        return '';
     }
-    $newsletter_t .= '</fieldset>';
-    //$newsletter_t .= "<hr>";
-    return $newsletter_t;
-  } 
-    else
-    return "";
 }
 
 function newsletter_attachmentslist($attachment)

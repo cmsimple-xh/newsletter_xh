@@ -5,6 +5,9 @@ $plugin_tx['newsletter']['menu_main'] = "Info / Versenden";
 $plugin_tx['newsletter']['admin_gplv3_1'] = "kann unter Einhaltung der";
 $plugin_tx['newsletter']['admin_gplv3_2'] = "verwendet werden.";
 
+$plugin_tx['newsletter']['material_icons_1'] = "Dieses Plugin verwendet";
+$plugin_tx['newsletter']['material_icons_2'] = "Diese Icon-Fonts sind unter Apache-Lizenzversion 2.0 verfügbar.";
+
 $plugin_tx['newsletter']['publish']="Versenden";
 $plugin_tx['newsletter']['admin_subscribers']="Empfänger";
 $plugin_tx['newsletter']['admin_log']="Log";

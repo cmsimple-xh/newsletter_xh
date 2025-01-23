@@ -28,7 +28,6 @@ $plugin_cf['newsletter']['max_execution_time']="29";
 $plugin_cf['newsletter']['mail_confirm_subscribtion']="mail";
 $plugin_cf['newsletter']['mail_confirm_unsubscribtion']="yes";
 $plugin_cf['newsletter']['encrypt_key']="8-32_characters_without_spaces";
-$plugin_cf['newsletter']['selected_img']="cr_green.gif";
 $plugin_cf['newsletter']['editor_relative_urls']="true";
 $plugin_cf['newsletter']['attachment_folder']="newsletter_attachments";
 $plugin_cf['newsletter']['license']="Linkware";
