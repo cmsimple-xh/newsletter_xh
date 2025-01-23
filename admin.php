@@ -289,7 +289,11 @@ if (XH_wantsPluginAdministration('newsletter')) {
                 if ($_SESSION['NEWSLETTER']['MailAttachment'] != "no") 
                   $mail->AddAttachment($pth['folder']['downloads'].($plugin_cf['newsletter']['attachment_folder']==""?"":$plugin_cf['newsletter']['attachment_folder']."/").$_SESSION['NEWSLETTER']['MailAttachment']);
             $mail->SMTPKeepAlive = true;
-            $newsletter_fc = file($_SESSION['NEWSLETTER']['MailingList']);
+            if (is_readable($_SESSION['NEWSLETTER']['MailingList'])) {
+                $newsletter_fc = file($_SESSION['NEWSLETTER']['MailingList']);
+            } else {
+                $newsletter_fc = array();
+            }
   
             $start_time = time(); 
             $fh = fopen($_SESSION['NEWSLETTER']['LogFile'],"a");            
