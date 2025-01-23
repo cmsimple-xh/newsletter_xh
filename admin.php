@@ -86,12 +86,15 @@ if (XH_wantsPluginAdministration('newsletter')) {
     $newsletter_t .= newsletter_template_file($pth,$plugin,$sl,$newspage,$newsletter_template_file);
     $template=file_get_contents($newsletter_template_file);
     if ($action == 'publish') {
-      if (trim($newsletter_adminmail) == "")
-        $newsletter_adminmail = ($plugin_cf['newsletter']['adminmail'] == "") ? $cf['mailform']['email'] :
-          $plugin_cf['newsletter']['adminmail'];
-      if (trim($newsletter_subject) == "")
-        $newsletter_subject = $plugin_tx['newsletter']['newsletter_subject'];
-  
+        if (trim($newsletter_adminmail) == '') {
+            $newsletter_adminmail = ($plugin_cf['newsletter']['adminmail'] == ''
+                ? $cf['mailform']['email']
+                : $plugin_cf['newsletter']['adminmail']);
+        }
+        if (trim($newsletter_subject) == '') {
+            $newsletter_subject = sprintf($plugin_tx['newsletter']['newsletter_subject'],
+                                          sv('SERVER_NAME'));
+        }
       $newsletter_t .= newsletter_mailinglist($c, $h, $l, $newspage, $action); // list of mailing list
       $newsletter_s = array_search($newspage, $h);
       //$newsletter_body = explode($plugin_cf['newsletter']['separator'], preg_replace("/" .

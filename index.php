@@ -456,7 +456,7 @@ function rswu($fname)
 
 function newsletter_AddSubscriberToList($newspages, $subscribermail, $subscriberfield) {
 
-    global $plugin_tx, $pth, $mail_confirm_subscribtion;
+    global $plugin_tx, $pth, $mail_confirm_subscribtion, $su;
 
     $subscribe_msg = '';
     if (newsletter_verify_email($subscribermail)
@@ -517,18 +517,19 @@ function newsletter_AddSubscriberToList($newspages, $subscribermail, $subscriber
         }
             $mail_confirm_subscribtion = strtolower(trim($mail_confirm_subscribtion));
             switch ($mail_confirm_subscribtion) {
-                case 'yes':
+                //case 'yes':
                 case 'mail':
                     $subscribe_msg .= newsletter_subscription_mail($subscribermail,
                                                                    $plugin_tx['newsletter']['subscribe_succes_subject'],
-                                                                   $plugin_tx['newsletter']['mail_subscribe_succes'],
+                                                                   sprintf($plugin_tx['newsletter']['mail_subscribe_succes'],
+                                                                           CMSIMPLE_URL . '?' . $su),
                                                                    '');
                     break;
                 case 'user':
                     $subscribe_msg .= $plugin_tx['newsletter']['subscribe_confirm_text'];
                     break;
                 case 'thx':
-                    $subscribe_msg .= $plugin_tx['newsletter']["mail_subscribe_thx"];
+                    $subscribe_msg .= $plugin_tx['newsletter']['mail_subscribe_thx'];
                     break;
                 default:
                     break;

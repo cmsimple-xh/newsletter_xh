@@ -31,12 +31,12 @@ $plugin_tx['newsletter']['unsubscribe_succes_subject']="Ihr Newsletter-Abo wurde
 $plugin_tx['newsletter']['confirmation_mail']="Eine Bestätigungs-E-Mail wurde an Ihre E-Mail-Adresse geschickt.";
 $plugin_tx['newsletter']['confirmation_mail_error']="Die Bestätigungs-E-Mail konnte wegen eines Fehlers nicht verschickt werden. Bitte kontaktieren Sie uns über das <a href=\"./?mailform\">Kontaktformular</a>.";
 $plugin_tx['newsletter']['mail_not_valid']="Ihre E-Mail-Adresse wurde vom System nicht akzeptiert.<br> Versuchen Sie es noch einmal oder kontaktieren Sie uns über das <a href=\"./?mailform\">Kontaktformular</a>.";
-$plugin_tx['newsletter']['mail_subscribe_succes']="Vielen Dank für die Anmeldung. Wenn Sie sich wieder abmelden möchten, gehen Sie auf unsere <a href=\"http:printshopzug.ch\">Website</a>.";
+$plugin_tx['newsletter']['mail_subscribe_succes']="Vielen Dank für die Anmeldung. Wenn Sie sich wieder abmelden möchten, gehen Sie auf unsere <a href=\"%s\">Website</a>.";
 $plugin_tx['newsletter']['mail_subscribe_thx']="Vielen Dank für die Anmeldung.";
 $plugin_tx['newsletter']['send']="Abschicken";
 $plugin_tx['newsletter']['subject']="Betreff: ";
 $plugin_tx['newsletter']['attachment']="Datei anfügen";
-$plugin_tx['newsletter']['newsletter_subject']="Newsletter von printshopzug.ch";
+$plugin_tx['newsletter']['newsletter_subject']="Newsletter von %s";
 $plugin_tx['newsletter']['test_mail']="Testsendung:";
 $plugin_tx['newsletter']['test_mail_sent']="Test-Newsletter gesendet an";
 $plugin_tx['newsletter']['test_mail_nosent']="Kein Test-Newsletter gesendet an";
