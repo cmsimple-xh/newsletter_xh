@@ -201,9 +201,9 @@ function newsletter_confirmation($newspages, $newspage_list, $subscribermail, $s
             $subscriber_class = 'newsletter_subscribe_ok';
             //disable confirmation
             $subscribe_confirmation_mail = '';
-            $subscribe .= '<p>'
+            $subscribe .= '<p><span class="newsletter_name">'
                         . $np
-                        . ': </p><p>'
+                        . ':</span> </p><p>'
                         . $plugin_tx['newsletter']['subscribe_confirm_text']
                         . '</p>';
             $confirm_str = $subscribermail;
@@ -489,27 +489,32 @@ function newsletter_AddSubscriberToList($newspages, $subscribermail, $subscriber
                 }
                 if (fwrite($fh,$subscriber_str . "\r\n")) {
                     // write new subscriber
-                    $subscribe_msg .= $np . ': '
+                    $subscribe_msg .= '<p><span class="newsletter_name">'
+                                    . $np
+                                    . ':</span></p><p>'
                                     . $plugin_tx['newsletter']['subscribe_succes']
-                                    . '<br>';
+                                    . '</p>';
                 }  
                 else {
                     $subscriber_class = 'newsletter_subscribe_errmsg';
-                    $subscribe_msg .= $np
-                                    . ': '
-                                    . $plugin_tx['newsletter']['subscribe_fail'];
+                    $subscribe_msg .= '<p><span class="newsletter_name">'
+                                    . $np
+                                    . ':</span></p><p>'
+                                    . $plugin_tx['newsletter']['subscribe_fail']
+                                    . '</p>';
                     //destroy $mail_confirm_subscribtion
                     $mail_confirm_subscribtion = '';
                 }
                 fclose($fh);
             } else {
-                $subscribe_msg .= $np
-                                . ': '
-                                . $plugin_tx['newsletter']['subscribe_fail'];
+                $subscribe_msg .= '<p><span class="newsletter_name">'
+                                . $np
+                                . ':</span></p><p>'
+                                . $plugin_tx['newsletter']['subscribe_fail']
+                                . '</p>';
                 $subscriber_class = 'newsletter_subscribe_errmsg';
             }
         }
-        $subscribe_msg .= '<br>';
             $mail_confirm_subscribtion = strtolower(trim($mail_confirm_subscribtion));
             switch ($mail_confirm_subscribtion) {
                 case 'yes':
@@ -530,8 +535,9 @@ function newsletter_AddSubscriberToList($newspages, $subscribermail, $subscriber
             }
             $subscribe_msg = '<div class="'
                            . $subscriber_class
-                           . '"><p>'
+                           . '"><p><span class="newsletter_abo_for">'
                            . $plugin_tx['newsletter']["subscription_for"]
+                           . '</span>'
                            . $subscribermail.
                            ' </p><p>'
                            . $subscribe_msg
@@ -554,17 +560,20 @@ function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfie
 
     global $plugin_tx, $plugin_cf, $pth;
 
-    $removed_msg = '<p>'
+    $removed_msg = '<p><span class="newsletter_abo_for">'
                  . $plugin_tx['newsletter']["subscription_for"]
+                 . '</span>'
                  . $subscribermail
                  . '</p>';
     if (newsletter_verify_email($subscribermail)) {
         foreach ($newspages as $np) {
-            $removed = $np
-                     . ': '
+            $removed = '<p><span class="newsletter_name">'
+                     . $np
+                     . ':</span></p><p>'
                      . $subscribermail
                      . ' '
-                     . $plugin_tx['newsletter']['unsubscribe_not_found'];
+                     . $plugin_tx['newsletter']['unsubscribe_not_found']
+                     . '</p>';
             $subscriber_class = 'newsletter_subscribe_errmsg';
             $fc = file($pth['folder']['plugins']
                 . 'newsletter/data/subscribe_'
@@ -579,9 +588,11 @@ function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfie
                     if (stripos($line, $subscribermail) === false) {
                         fwrite($fh, $line);
                     } else {
-                        $removed = $np
-                                 . ': '
-                                 . $plugin_tx['newsletter']['unsubscribe_succes'];
+                        $removed = '<p><span class="newsletter_name">'
+                                 . $np
+                                 . ':</span></p><p>'
+                                 . $plugin_tx['newsletter']['unsubscribe_succes']
+                                 . '</p>';
                         $subscriber_class = 'newsletter_subscribe_ok';
                         if (stristr($plugin_cf['newsletter']['mail_confirm_unsubscribtion'], 'yes')) {
                             newsletter_subscription_mail($subscribermail,
@@ -594,9 +605,9 @@ function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfie
                 fclose($fh);
             }
             else {
-                $removed .= ' ' . $plugin_tx['newsletter']['unsubscribe_fail'];
+                $removed .= '<p>' . $plugin_tx['newsletter']['unsubscribe_fail'] . '</p>';
             }
-            $removed_msg .= '<p>' . $removed . '</p>';
+            $removed_msg .= $removed;
         }
     }
     else {
@@ -613,16 +624,16 @@ function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfie
     return $removed_msg;
 }
 
-function extern_AddSubscriberToList($newspage, $subscribermail, $fieldarray) 
-{
-    global $plugin_tx,$plugin_cf,$cf, $pth, $mail_confirm_subscribtion;
+// Is this function still used?
+function extern_AddSubscriberToList($newspage, $subscribermail, $fieldarray) {
 
-    if (stristr($mail_confirm_subscribtion,"user")) {
-        $o.= newsletter_confirmation($newspage, $subscribermail, $fieldarray);
+    global $mail_confirm_subscribtion, $o;
+
+    if (stristr($mail_confirm_subscribtion, 'user')) {
+        $o .= newsletter_confirmation($newspage, $subscribermail, $fieldarray);
         return true;
-    }
-    else {
-        $o.=newsletter_AddSubscriberToList($newspage, $subscribermail, $fieldarray);
+    } else {
+        $o .= newsletter_AddSubscriberToList($newspage, $subscribermail, $fieldarray);
         return true;
     }
     return false;

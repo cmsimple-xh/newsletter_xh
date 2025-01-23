@@ -20,6 +20,12 @@
     background-color: #B0E57C; 
     color: #004000;
 }
+.newsletter_subscribe_ok p span.newsletter_name,
+.newsletter_subscribe_errmsg p span.newsletter_name,
+.newsletter_subscribe_errmsg p span.newsletter_abo_for,
+.newsletter_subscribe_ok p span.newsletter_abo_for {
+    font-weight: bold;
+}
 .newsleter_fieldset {
     padding: 10px;
 }
