@@ -469,6 +469,8 @@ function newsletter_AddSubscriberToList($newspages, $subscribermail, $subscriber
                      . '.txt';
             if (is_readable($fhandle)) {
                 $fc = file($fhandle);
+            } else {
+                $fc = array();
             }
             if ($fh = fopen($fhandle, 'w')) {
                 //$fc=array_unique($fc);
@@ -573,7 +575,12 @@ function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfie
                      . ':</span></p><p>'
                      . $subscribermail
                      . ' '
-                     . $plugin_tx['newsletter']['unsubscribe_not_found']
+                     . sprintf($plugin_tx['newsletter']['unsubscribe_not_found'],
+                               CMSIMPLE_URL
+                               . ($plugin_tx['newsletter']['mailform_url'] != ''
+                                   ? '?' . $plugin_tx['newsletter']['mailform_url']
+                                   : '')
+                               )
                      . '</p>';
             $subscriber_class = 'newsletter_subscribe_errmsg';
             $fc = file($pth['folder']['plugins']
@@ -604,9 +611,15 @@ function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfie
                     }
                 }    
                 fclose($fh);
-            }
-            else {
-                $removed .= '<p>' . $plugin_tx['newsletter']['unsubscribe_fail'] . '</p>';
+            } else {
+                $removed .= '<p>'
+                          . sprintf($plugin_tx['newsletter']['unsubscribe_fail'],
+                                    CMSIMPLE_URL
+                                    . ($plugin_tx['newsletter']['mailform_url'] != ''
+                                        ? '?' . $plugin_tx['newsletter']['mailform_url']
+                                        : '')
+                                    )
+                          . '</p>';
             }
             $removed_msg .= $removed;
         }
