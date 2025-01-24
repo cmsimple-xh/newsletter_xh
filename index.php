@@ -245,7 +245,7 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
 
     $o = '';
     $onload .= 'getFocus()';
-    $hjs .= '<script type="text/javascript">
+    $hjs .= '<script>
     /* <![CDATA[ */
     function getFocus() { 
       document.getElementById("subscribermail").focus();
