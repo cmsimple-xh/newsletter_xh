@@ -34,16 +34,20 @@
 }
 .newsletter_label {
     margin: 0;
-    width: 120px;
+    width: 150px;
     display: inline-block;
 }
 .newsletter_label:has(+ input[name^="news_page"]) {
-    margin: 0 1em 0 0;
+    margin: 0.5em 1em 0 0;
     width: auto;
 }
 .newsletter_inputfield {
     margin: 0.2em 0;
-    width: calc(100% - 130px);
+    width: calc(100% - 160px);
+    padding: 0.25em 0.5em !important;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 1em;
 }
 .newsletter_textarea {
     box-sizing: border-box;
@@ -63,7 +67,11 @@
     color: red;
 }
 .newsleter_fieldset #err ~ #addel {
+    box-sizing: border-box;
+    font-family: inherit;
     margin: 0.2em 0;
+    padding: 0.25em 0.5em;
+    font-size: 1em;
 }
 
 /* Backend */
