@@ -68,6 +68,24 @@ function newsletter_Systemcheck($nl_cmsVersionArray, $nl_phpVersion) {
                . "\n";
         }
     }
+// access protection
+    $nlDataFolder = $pth['folder']['plugin'] . 'data/';
+    $nlCheckDataFolder = XH_isAccessProtected($nlDataFolder);
+    if($nlCheckDataFolder) {
+        $o .= '<p class="xh_success"><a target="_blank" href="'
+            . $nlDataFolder
+            . '">'
+            . $nlDataFolder
+            . '&#x2192 access-protected</a></p>'
+            . "\n";
+    } else {
+        $o .= '<p class="xh_fail"><a target="_blank" href="'
+            . $nlDataFolder
+            . '">'
+            . $nlDataFolder
+            . '&#x2192 not access-protected</a></p>'
+            . "\n";
+    }
 
     return $o;
 }
