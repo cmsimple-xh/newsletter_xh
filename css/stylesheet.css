@@ -103,6 +103,7 @@
 #newsletter-publish img.helpicon {
     vertical-align: middle;
 }
+#newsletter-publish .newsletter_selected svg,
 #newsletter-publish .newsletter_selected img {
     padding: 0 0.25em 0.25em 0;
     vertical-align: middle;

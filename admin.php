@@ -492,23 +492,23 @@ foreach ($c as $i) {
                       . $plugin_tx['newsletter']['mailing_list']
                       . ': </legend>';
         $count = 0;
+        $selectedSVG = file_get_contents($pth['folder']['plugins']
+                                       . $plugin
+                                       . '/images/selected.svg');
         foreach ($newsletter_array as $i) {
             if ($i == $newspage) {
                 $newsletter_t .= '<div class="newsletter_selected">'
-                               . '<img src="'
-                               . $pth['folder']['plugins']
-                               . $plugin
-                               . '/images/selected.svg'
-                               . '" alt="" title="selected">'
+                               . $selectedSVG
                                . $i
                                . '</div>';
                 $_SESSION['subscribe_page'] = $subscribe_pages[$count]
                                             . '&uns=1'; //& -> text based e-mail can't handle &amp;
             } else {
-                $newsletter_t .= '<img src="'
+                $newsletter_t .= '<div class="newsletter_selected"><img src="'
                                . $pth['folder']['plugins']
                                . $plugin
-                               . '/images/transparent.png" alt="">'.'<a href="'
+                               . '/images/transparent.png" alt="">'
+                               . '<a href="'
                                . $sn
                                . '?'
                                . $plugin
@@ -519,7 +519,7 @@ foreach ($c as $i) {
                                . '">'
                                . $i
                                . '</a>'
-                               . '<br>';
+                               . '</div>';
             }
             ++$count;
         }
