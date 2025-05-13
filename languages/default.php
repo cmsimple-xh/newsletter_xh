@@ -93,5 +93,11 @@ $plugin_tx['newsletter']['cf_smtp_auth_username']="<p>Authentification username 
 $plugin_tx['newsletter']['cf_smtp_auth_password']="<p>Authentification password to SMTP server.</p>";
 $plugin_tx['newsletter']['terms_of_use']='<p><strong>Terms of use:</strong></p><p>Newsletter may only be used to send messages to subscribers who voluntary have agreed to receive messages from your website by subscribing. All other use is to be regarded as spamming and is prohibited.</p><p> By using the Newsletter you automatically accept these conditions.</p>';
 $plugin_tx['newsletter']['cf_debug']="0 = off (for production use)  1 = client messages  2 = client and server messages";
+//version 2.5.1
+$plugin_tx['newsletter']['field_leave_blank']="Do not fill in!";
+$plugin_tx['newsletter']['field_do_not_change']="Do not change!";
+$plugin_tx['newsletter']['info_spam_suspicious']="Spam suspicion<br>Your request will not be processed further.";
+$plugin_tx['newsletter']['cf_spam_protection_min_time']="Minimum time in seconds that must elapse before the form is sent. (default: 5)";
+$plugin_tx['newsletter']['cf_spam_protection_max_time']="Maximum time in seconds that may elapse before the form is sent. (default: 1800)";
 
 $plugin_tx['newsletter']['cf_license']="<p>Default is Linkware</p><p><strong>Do not change unless you have purchased Newslterrer Remove Link license on simplesolutions.dk website</strong></p>";    

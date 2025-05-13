@@ -93,7 +93,12 @@
    
  version 2.5.0
    updated to CMSimple XH version 1.8
+   
+ version 2.5.1
+   Spam protection, Honeypot
 */
+
+require($pth['folder']['plugins'] . 'newsletter/includes/newsletterfuncs.php');
 
 // PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
@@ -112,7 +117,22 @@ function newsletter($newspage_list)
 {
     global $plugin_tx, $plugin_cf, $cf, $sn, $su, $pth, $mail_confirm_subscribtion;
     //error_reporting (E_ALL ^ E_NOTICE);
-    
+
+    //Spam protection
+    if ($_SERVER['REQUEST_METHOD'] == 'POST'
+    && !empty($_POST['subscribermail'])) {
+        //Spam protection, Honeypot
+        $honeypotCheck = nl_fieldHoneypotCheck();
+        if ($honeypotCheck) {
+            return $honeypotCheck;
+        }
+        //Spam protection, Time
+        $timeCheck = nl_fieldSpamTimeCheck();
+        if ($timeCheck) {
+            return $timeCheck;
+        }
+    }
+
     $adddel=isset($_POST['adddel']) ? $_POST['adddel'] : (isset($_GET['adddel'])?$_GET['adddel']:"");
     $subscribermail=isset($_POST['subscribermail']) ? $_POST['subscribermail'] : (isset($_GET['subscribermail'])?$_GET['subscribermail']:"");//$_GET['subscribermail'];
     if (trim($plugin_tx['newsletter']['subscriber_fields_label'])!="") {
@@ -241,7 +261,9 @@ function newsletter_confirmation($newspages, $newspage_list, $subscribermail, $s
 
 function newsletter_create_form($newspage_list, $subscribermail, $subscriberfield, $newspages) {
 
-    global $plugin_tx, $plugin_cf, $sn, $su, $hjs, $onload;
+    global $plugin_tx, $sn, $su, $hjs, $onload;
+
+    $ptx = $plugin_tx['newsletter'];
 
     $o = '';
     $onload .= 'getFocus()';
@@ -286,7 +308,7 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
          busy=1;
         if (trim(field.value)=="") {
              field.style.backgroundColor ="#FFAEAE";
-            document.getElementById("err").innerHTML=\''.$plugin_tx['newsletter']['subscriber_fields_empty'].'\'; 
+            document.getElementById("err").innerHTML=\'' . $ptx['subscriber_fields_empty'].'\'; 
           field.focus();
           setTimeout("busy=0", 1);
           return true;
@@ -304,7 +326,7 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
          busy=1;
       var validRegExp = /^[^\s()<>@,;:\"\/\[\]?=]+@\w[\w-]*(\.\w[\w-]*)*\.[a-z]{2,}$/i;
       if (form.subscribermail.value.search(validRegExp) == -1 ) {
-           document.getElementById("err").innerHTML="'.$plugin_tx['newsletter']['subscriber_email_empty'].'";
+           document.getElementById("err").innerHTML="' . $ptx['subscriber_email_empty'].'";
              form.subscribermail.style.backgroundColor ="#FFAEAE";
              form.subscribermail.focus();
              form.subscribermail.select();
@@ -330,11 +352,11 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
         $o .= '<select name="adddel" id="addel" style="visibility:hidden">'
             . "\n"
             . '<option>'
-            . $plugin_tx['newsletter']['subscribe']
+            . $ptx['subscribe']
             . '</option>'
             . "\n";
         $o .= '<option selected>'
-            . $plugin_tx['newsletter']['unsubscribe']
+            . $ptx['unsubscribe']
             . '</option>'
             . "\n"
             . '</select>'
@@ -345,12 +367,12 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
             . '<select name="adddel" id="addel" onchange="hideFields(this);">'
             . "\n"
             . '<option>'
-            . $plugin_tx['newsletter']['subscribe']
+            . $ptx['subscribe']
             .'</option>'
             . "\n";
         $o .= '<option>'
             . "\n"
-            . $plugin_tx['newsletter']['unsubscribe']
+            . $ptx['unsubscribe']
             . '</option>'
             . "\n"
             . '</select>'
@@ -359,7 +381,7 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
 
     $o .= '<br>'
         . '<span class="newsletter_label">'
-        . $plugin_tx['newsletter']['subscriber_email_label']
+        . $ptx['subscriber_email_label']
         . ':&nbsp;</span>'
         . '<input name="subscribermail" id="subscribermail" type="text" class="newsletter_inputfield" value="'
         . (isset($_GET['uns'])
@@ -368,11 +390,11 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
         . '" onblur="newsletter_ValidEmail(document.subscribe);">'
         . '<br>'
         . "\n";
-    $mandatory = (trim($plugin_tx['newsletter']['subscriber_fields_mandatory']) != '');
+    $mandatory = (trim($ptx['subscriber_fields_mandatory']) != '');
     if (!isset($_GET['uns'])
-    && trim($plugin_tx['newsletter']['subscriber_fields_label']) != '') {
-        $labels = explode(trim($plugin_tx['newsletter']['subscriber_fields_delimiter']),
-                          $plugin_tx['newsletter']['subscriber_fields_label']);
+    && trim($ptx['subscriber_fields_label']) != '') {
+        $labels = explode(trim($ptx['subscriber_fields_delimiter']),
+                          $ptx['subscriber_fields_label']);
         $user_input = '';
         for ($i = 0; $i < sizeof($labels); $i++) {
             $user_input .= '<span class="newsletter_label">'
@@ -402,8 +424,8 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
     if (count($newspage_arr) > 1) {
         // multiple newsletter subscribe, create checkboxes
         $o .= ((isset($_GET['uns']))
-                ? $plugin_tx['newsletter']['select_newsletters_unsubscribe']
-                : $plugin_tx['newsletter']['select_newsletters_subscribe'])
+                ? $ptx['select_newsletters_unsubscribe']
+                : $ptx['select_newsletters_subscribe'])
             . '<br>';
         foreach ($newspage_arr as $np) {
             $checked = false;
@@ -434,11 +456,16 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
             . '">'
             . '&nbsp;';
     }
+    //Spam protection, Honeypot
+    $o .= nl_fieldHoneypotDisplay();
+    //Spam protection, Timecheck
+    $o .= nl_fieldSpamTimeDisplay();
+    // Submit button
     $o .= '<br>'
         . '<span class="newsletter_label"></span>'
         . "\n"
         . '<input type="submit" class="submit" value="'
-        . $plugin_tx['newsletter']['send']
+        . $ptx['send']
         . '">'
         . "\n"
         . '</form>';

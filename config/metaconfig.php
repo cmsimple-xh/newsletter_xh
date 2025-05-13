@@ -19,6 +19,8 @@ $plugin_mcf['newsletter']['mail_confirm_subscribtion']='enum:mail,user,no';
 $plugin_mcf['newsletter']['mail_confirm_unsubscribtion']='enum:yes,no';
 $plugin_mcf['newsletter']['smtp_auth']="bool";
 $plugin_mcf['newsletter']['smtp_auth_password']="password";
+$plugin_mcf['newsletter']['spam_protection_min_time']="number:1,20,1";
+$plugin_mcf['newsletter']['spam_protection_max_time']="number:180,3600,60";
 $plugin_mcf['newsletter']['debug']="enum:0,1,2";
 
 // for Update to version 2.5.0

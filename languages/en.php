@@ -89,3 +89,9 @@ $plugin_tx['newsletter']['adm_newsletter_attachment']="<p>Select an attachment f
 $plugin_tx['newsletter']['adm_newsletter_sendto']="<p>If \"Send test mail\" is checked then you will send only a test newsletter to the specified e-mail adress.</p><p>Check the content, links and images (they must have an absolute path) and if your received newsletter is as expected then uncheck the check box and push Publish button again to send newsletters to all recipients.</p>";
 $plugin_tx['newsletter']['adm_newsletter_restore']="<p>In case of time out this field will contain the number of the last successful newsletter (ff the field is empty then you need to insert the number of last successful newsletter from the log file).</p><p>Click the Publish button to continue sending mails.</p>";
 $plugin_tx['newsletter']['terms_of_use']="<p><strong>Terms of use:</strong></p><p>Newsletter may only be used to send messages to subscribers who voluntary have agreed to receive messages from your website by subscribing. All other use is to be regarded as spamming and is prohibited. </p><p> By using the Newsletter you automatically accept these conditions.</p>";
+//version 2.5.1
+$plugin_tx['newsletter']['field_leave_blank']="Do not fill in!";
+$plugin_tx['newsletter']['field_do_not_change']="Do not change!";
+$plugin_tx['newsletter']['info_spam_suspicious']="Spam suspicion<br>Your request will not be processed further.";
+$plugin_tx['newsletter']['cf_spam_protection_min_time']="Minimum time in seconds that must elapse before the form is sent. (default: 5)";
+$plugin_tx['newsletter']['cf_spam_protection_max_time']="Maximum time in seconds that may elapse before the form is sent. (default: 1800)";

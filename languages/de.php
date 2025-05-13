@@ -90,3 +90,9 @@ $plugin_tx['newsletter']['cf_smtp_auth']="<p>Setzen Sie diesen Wert auf true, we
 $plugin_tx['newsletter']['cf_smtp_auth_username']="<p>Benutzername für den SMTP-Server.</p>";
 $plugin_tx['newsletter']['cf_smtp_auth_password']="<p>Kennwort für den SMTP-Server.</p>";
 $plugin_tx['newsletter']['terms of use']='<p><strong>Bedingungen für die Nutzung:</strong></p><p>Der Newsletter darf nur zum Versand von Nachrichten an Abonnenten verwendet werden, die sich freiwillig für den Erhalt von Nachrichten von Ihrer Website angemeldet haben. Jede andere Verwendung ist als Spamming zu betrachten und ist verboten.</p><p>Mit der Nutzung des Newsletters akzeptieren Sie automatisch diese Bedingungen.</p>';
+//version 2.5.1
+$plugin_tx['newsletter']['field_leave_blank']="Nicht ausfüllen!";
+$plugin_tx['newsletter']['field_do_not_change']="Nicht ändern!";
+$plugin_tx['newsletter']['info_spam_suspicious']="Spamverdacht<br>Ihre Anfrage wird nicht weiter bearbeitet.";
+$plugin_tx['newsletter']['cf_spam_protection_min_time']="Zeit in Sekunden, die mindestens vergehen muss, bevor das Formular abgesendet wird. (Standard: 5)";
+$plugin_tx['newsletter']['cf_spam_protection_max_time']="Zeit in Sekunden, die höchstens vergehen darf, bevor das Formular abgesendet wird. (Standard: 1800)";
