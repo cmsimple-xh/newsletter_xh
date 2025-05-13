@@ -28,7 +28,7 @@ function nl_fieldHoneypotDisplay() {
        . "\n"
        . '<input placeholder="'
        . $plugin_tx['newsletter']['field_leave_blank']
-       . '" class="newsleter_noeyes" name="hp-subject" type="text" class="newsletter_inputfield" value="">'
+       . '" class="newsletter_inputfield newsletter_noeyes" name="hp-subject" type="text" value="">'
        . "\n";
 
     return $o;
@@ -79,11 +79,11 @@ function nl_fieldSpamTimeDisplay() {
     global $plugin_tx;
 
     $o = '<br>'
-       . '<span class="newsletter_label newsleter_noeyes">'
+       . '<span class="newsletter_label newsletter_noeyes">'
        . $plugin_tx['newsletter']['field_do_not_change']
        . '</span>'
        . "\n"
-       . '<input class="newsleter_noeyes" name="sp_time" type="text" class="newsletter_inputfield" value="'
+       . '<input class="newsletter_inputfield newsletter_noeyes" name="sp_time" type="text" value="'
        . nl_generateTimeHash()
        . '">'
        . "\n";
