@@ -63,15 +63,13 @@ function nl_generateTimeHash() {
     $iv = md5($cf['security']['password'], true);
     // the encryption method
     $cipher = 'aes-128-cbc';
-    $time = time();
 
+    $o = time();
     // test whether encryption method is available
     if(in_array($cipher, openssl_get_cipher_methods())) {
         // returns encrypted timestamp value
-        $o = openssl_encrypt($time, $cipher, $key, 0, $iv);
-    } else {
-        $o = $time;
-  }
+        $o = openssl_encrypt($o, $cipher, $key, 0, $iv);
+    }
 
   return $o;
 }
@@ -110,12 +108,15 @@ function nl_fieldSpamTimeCheck() {
 
     $givenTime = isset($_POST['sp_time']) ? $_POST['sp_time'] : '';
 
+    $decryptedTime = $givenTime;
     // decode passed value
-    $decryptedTime = openssl_decrypt($givenTime, $cipher, $key, 0, $iv);
+    if (in_array($cipher, openssl_get_cipher_methods())) {
+        $decryptedTime = openssl_decrypt($givenTime, $cipher, $key, 0, $iv);
+    }
     // check whether the transferred value could be checked
     if ($decryptedTime) {
         $currentTime = time();
-        if(($currentTime - $decryptedTime) <= $minTime
+        if (($currentTime - $decryptedTime) <= $minTime
         || ($currentTime - $decryptedTime) >= $maxTime ) {
             $failmessage = 'The submission is outside from the specified time frame.';
         }
