@@ -97,6 +97,7 @@ $plugin_tx['newsletter']['cf_debug']="0 = off (for production use)  1 = client m
 $plugin_tx['newsletter']['field_leave_blank']="Do not fill in!";
 $plugin_tx['newsletter']['field_do_not_change']="Do not change!";
 $plugin_tx['newsletter']['info_spam_suspicious']="Spam suspicion<br>Your request will not be processed further.";
+$plugin_tx['newsletter']['cf_spam_protection']="Activate spam protection";
 $plugin_tx['newsletter']['cf_spam_protection_min_time']="Minimum time in seconds that must elapse before the form is sent. (default: 5)";
 $plugin_tx['newsletter']['cf_spam_protection_max_time']="Maximum time in seconds that may elapse before the form is sent. (default: 1800)";
 

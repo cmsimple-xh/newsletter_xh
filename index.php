@@ -98,7 +98,10 @@
    Spam protection, Honeypot
 */
 
-require($pth['folder']['plugins'] . 'newsletter/includes/newsletterfuncs.php');
+//Spam protection
+if ($plugin_cf['newsletter']['spam_protection'] == 'true') {
+    require($pth['folder']['plugins'] . 'newsletter/includes/nlspamfuncs.php');
+}
 
 // PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
@@ -119,7 +122,8 @@ function newsletter($newspage_list)
     //error_reporting (E_ALL ^ E_NOTICE);
 
     //Spam protection
-    if ($_SERVER['REQUEST_METHOD'] == 'POST'
+    if (($plugin_cf['newsletter']['spam_protection'] == 'true')
+    && $_SERVER['REQUEST_METHOD'] == 'POST'
     && !empty($_POST['subscribermail'])) {
         //Spam protection, Honeypot
         $honeypotCheck = nl_fieldHoneypotCheck();
@@ -261,7 +265,7 @@ function newsletter_confirmation($newspages, $newspage_list, $subscribermail, $s
 
 function newsletter_create_form($newspage_list, $subscribermail, $subscriberfield, $newspages) {
 
-    global $plugin_tx, $sn, $su, $hjs, $onload;
+    global $plugin_cf, $plugin_tx, $sn, $su, $hjs, $onload;
 
     $ptx = $plugin_tx['newsletter'];
 
@@ -456,10 +460,13 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
             . '">'
             . '&nbsp;';
     }
-    //Spam protection, Honeypot
-    $o .= nl_fieldHoneypotDisplay();
-    //Spam protection, Timecheck
-    $o .= nl_fieldSpamTimeDisplay();
+    //Spam protection
+    if ($plugin_cf['newsletter']['spam_protection'] == 'true') {
+        //Spam protection, Honeypot
+        $o .= nl_fieldHoneypotDisplay();
+        //Spam protection, Timecheck
+        $o .= nl_fieldSpamTimeDisplay();
+    }
     // Submit button
     $o .= '<br>'
         . '<span class="newsletter_label"></span>'

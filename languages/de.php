@@ -94,5 +94,6 @@ $plugin_tx['newsletter']['terms of use']='<p><strong>Bedingungen für die Nutzun
 $plugin_tx['newsletter']['field_leave_blank']="Nicht ausfüllen!";
 $plugin_tx['newsletter']['field_do_not_change']="Nicht ändern!";
 $plugin_tx['newsletter']['info_spam_suspicious']="Spamverdacht<br>Ihre Anfrage wird nicht weiter bearbeitet.";
+$plugin_tx['newsletter']['cf_spam_protection']="Spamschutz aktivieren";
 $plugin_tx['newsletter']['cf_spam_protection_min_time']="Zeit in Sekunden, die mindestens vergehen muss, bevor das Formular abgesendet wird. (Standard: 5)";
 $plugin_tx['newsletter']['cf_spam_protection_max_time']="Zeit in Sekunden, die höchstens vergehen darf, bevor das Formular abgesendet wird. (Standard: 1800)";
