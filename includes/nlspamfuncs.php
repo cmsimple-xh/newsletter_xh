@@ -50,22 +50,33 @@ function nl_renderErrorMessage($ptxPart2) {
  *
  * return html
  */
-function nl_renderFormField($ptxPart2, $name, $value, $placeholder = false) {
+function nl_renderFormField($name,
+                            $type,
+                            $value,
+                            $ptxPart2 = '',
+                            $placeholder = false) {
 
     global $plugin_tx;
 
     $o = '<br>'
-       . '<span class="newsletter_label newsletter_noeyes">'
-       . $plugin_tx['newsletter'][$ptxPart2]
-       . '</span>'
+       . ($type != 'hidden'
+            ? '<span class="newsletter_label newsletter_noeyes">'
+               . $plugin_tx['newsletter'][$ptxPart2]
+               . '</span>'
+            : '')
        . "\n"
        . '<input'
        . ($placeholder
             ? ' placeholder="' . $plugin_tx['newsletter'][$ptxPart2] . '"'
             : '')
-       . ' class="newsletter_inputfield newsletter_noeyes" name="'
+       . ($type != 'hidden'
+            ? ' class="newsletter_inputfield newsletter_noeyes"'
+            : '')
+       . ' name="'
        . $name
-       . '" type="text" value="'
+       . '" type="'
+       . $type
+       . '" value="'
        . $value
        . '">'
        . "\n";
@@ -80,9 +91,10 @@ function nl_renderFormField($ptxPart2, $name, $value, $placeholder = false) {
  */
 function nl_fieldHoneypotDisplay() {
 
-    return nl_renderFormField('field_leave_blank',
-                              'hp-subject',
+    return nl_renderFormField('hp-subject',
+                              'text',
                               '',
+                              'field_leave_blank',
                               'field_leave_blank');
 }
 
@@ -140,8 +152,8 @@ function nl_generateTimeHash() {
  */
 function nl_fieldSpamTimeDisplay() {
 
-    return nl_renderFormField('field_do_not_change',
-                              'sp_time',
+    return nl_renderFormField('sp_time',
+                              'hidden',
                               nl_generateTimeHash());
 }
 

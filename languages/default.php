@@ -95,7 +95,6 @@ $plugin_tx['newsletter']['terms_of_use']='<p><strong>Terms of use:</strong></p><
 $plugin_tx['newsletter']['cf_debug']="0 = off (for production use)  1 = client messages  2 = client and server messages";
 //version 2.5.1
 $plugin_tx['newsletter']['field_leave_blank']="Do not fill in!";
-$plugin_tx['newsletter']['field_do_not_change']="Do not change!";
 $plugin_tx['newsletter']['info_spam_suspicious']="Spam suspicion<br>Your request will not be processed further.";
 $plugin_tx['newsletter']['cf_spam_protection']="Activate spam protection";
 $plugin_tx['newsletter']['cf_spam_protection_min_time']="Minimum time in seconds that must elapse before the form is sent. (default: 5)";

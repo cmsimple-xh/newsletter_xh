@@ -91,7 +91,6 @@ $plugin_tx['newsletter']['adm_newsletter_restore']="<p>In case of time out this 
 $plugin_tx['newsletter']['terms_of_use']="<p><strong>Terms of use:</strong></p><p>Newsletter may only be used to send messages to subscribers who voluntary have agreed to receive messages from your website by subscribing. All other use is to be regarded as spamming and is prohibited. </p><p> By using the Newsletter you automatically accept these conditions.</p>";
 //version 2.5.1
 $plugin_tx['newsletter']['field_leave_blank']="Do not fill in!";
-$plugin_tx['newsletter']['field_do_not_change']="Do not change!";
 $plugin_tx['newsletter']['info_spam_suspicious']="Spam suspicion<br>Your request will not be processed further.";
 $plugin_tx['newsletter']['cf_spam_protection']="Activate spam protection";
 $plugin_tx['newsletter']['cf_spam_protection_min_time']="Minimum time in seconds that must elapse before the form is sent. (default: 5)";
