@@ -55,7 +55,7 @@ function nl_renderFormField($ptxPart2, $name, $value, $placeholder = false) {
     global $plugin_tx;
 
     $o = '<br>'
-       . '<span class="newsletter_label newsleter_noeyes">'
+       . '<span class="newsletter_label newsletter_noeyes">'
        . $plugin_tx['newsletter'][$ptxPart2]
        . '</span>'
        . "\n"
