@@ -73,6 +73,10 @@
     padding: 0.25em 0.5em;
     font-size: 1em;
 }
+.newsletter_noeyes {
+    /*visibility: hidden;*/
+    display: none;
+}
 
 /* Backend */
 #newsletter-publish form[name="newsmail"] input:not(form[name="newsmail"] input[type="checkbox"]),
