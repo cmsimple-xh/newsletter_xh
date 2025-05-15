@@ -85,25 +85,45 @@ if (XH_wantsPluginAdministration('newsletter')) {
             $newsletter_subject = sprintf($plugin_tx['newsletter']['newsletter_subject'],
                                           sv('SERVER_NAME'));
         }
-      $newsletter_t .= newsletter_mailinglist($c, $h, $l, $newspage, $action); // list of mailing list
-      $newsletter_s = array_search($newspage, $h);
-      //$newsletter_body = explode($plugin_cf['newsletter']['separator'], preg_replace("/" .
-      //  chr(35) . "CMSimple.*" . chr(35) . "/Uis", "", preg_replace("/<h[1-5]>(.+?)<\/h[1-5]>/i",
-      //  "", $c[$newsletter_s])));
-      
-       $newsletter_body = explode($plugin_cf['newsletter']['separator'], preg_replace("/" .
-        chr(35) . "CMSimple.*" . chr(35) . "/Uis", "", preg_replace("/<h[1-".$cf['menu']['levels']."]>(.+?)<\/h[1-".$cf['menu']['levels']."]>/i", "", $c[$newsletter_s])));
-  
-          $newsletter_unreadable="";
-          if (trim($plugin_tx['newsletter']['unreadable'])!="") {
-              $newsletter_unreadable='<a href="'.newsletter_headpath($h, $l, $newspage).'">'.$plugin_tx['newsletter']['unreadable'].'</a>';
-          }
-          if (stristr($plugin_cf['newsletter']['editor_relative_urls'],"true")) {
-              $newsletter_body[0]=preg_replace('#(href|src)="([^:"]*)("|(?:(\?)[^"]*"))#','$1="'.(isset($_SERVER['HTTPS']) ? "https" : "http").'://'.$_SERVER['HTTP_HOST'].'/$2$3',$newsletter_body[0]);    //replace relative urls with absolute (absolute urls stay unchanged version 2.3.1)    
-          }
-          $template=preg_replace('/\{NOT_READABLE\}/',$newsletter_unreadable,$template);
-          $template=preg_replace('/\{CONTENT\}/',$newsletter_body[0],$template);
-          $template=preg_replace('/\{UNSUBSCRIBE\}/','<a href="'.$_SESSION['subscribe_page'].'">'.$plugin_tx['newsletter']['footer_unsubscribe'].'</a>',$template);
+        $newsletter_t .= newsletter_mailinglist($c, $h, $l, $newspage, $action); // list of mailing list
+        $newsletter_s = array_search($newspage, $h);
+        $nlBodyArray = explode($plugin_cf['newsletter']['separator'], $c[$newsletter_s]);
+        $patternArray = array('/.*?<!--XH_ml[1-9]:.*?-->/isu',
+                              '/#CMSimple (.*?)#/is',
+                              '/<h[1-6]>(.+?)<\/h[1-6]>/is');
+        $nlBody = preg_replace($patternArray, '', $nlBodyArray[0]);
+
+        $newsletter_unreadable = '';
+        if (trim($plugin_tx['newsletter']['unreadable']) != '') {
+          $newsletter_unreadable = '<a href="'
+                                 . newsletter_headpath($h, $l, $newspage)
+                                 . '">'
+                                 . $plugin_tx['newsletter']['unreadable']
+                                 . '</a>';
+        }
+        //replace relative urls with absolute (absolute urls stay unchanged version 2.3.1)
+        if ($plugin_cf['newsletter']['editor_relative_urls'] == 'true') {
+            $nlBody = preg_replace('#(href|src)="([^:"]*)("|(?:(\?)[^"]*"))#',
+                                   '$1="' . (isset($_SERVER['HTTPS'])
+                                                ? "https" 
+                                                : "http")
+                                          . '://'
+                                          . $_SERVER['HTTP_HOST']
+                                          . '/$2$3',
+                                   $nlBody);
+        }
+        $template = preg_replace('/\{NOT_READABLE\}/',
+                                 $newsletter_unreadable,
+                                 $template);
+        $template = preg_replace('/\{CONTENT\}/',
+                                 $nlBody,
+                                 $template);
+        $template = preg_replace('/\{UNSUBSCRIBE\}/',
+                                 '<a href="' . $_SESSION['subscribe_page']
+                                             . '">'
+                                             . $plugin_tx['newsletter']['footer_unsubscribe']
+                                             . '</a>',
+                                 $template);
           preg_match('/<body[^>]*>(.*?)<\/body>/si', $template, $regs);
           $template_preview = $regs[1];
           
