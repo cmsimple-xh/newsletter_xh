@@ -38,11 +38,9 @@ function nl_renderErrorMessage($ptxPart2) {
 
     global $plugin_tx;
 
-    $o = '<p class="xh_fail">'
-       . $plugin_tx['newsletter'][$ptxPart2]
-       . '</p>';
-
-    return $o;
+    return '<p class="xh_fail">'
+          . $plugin_tx['newsletter'][$ptxPart2]
+          . '</p>';
 }
 
 /*
@@ -105,8 +103,6 @@ function nl_fieldHoneypotDisplay() {
  */
 function nl_fieldHoneypotCheck() {
 
-    global $plugin_tx;
-
     if (!empty($_POST['hp-subject'])) {
         $failmessage = 'Honeypot';
         nl_XH_logMessage($failmessage);
@@ -131,13 +127,12 @@ function nl_generateTimeHash($time) {
     // the encryption method
     $algo = 'sha1';
 
-    $o = $time;
     // test whether encryption method is available
     if (in_array($algo, hash_hmac_algos())) {
-        $o = hash_hmac($algo, $o, $key);
+        return hash_hmac($algo, $time, $key);
     }
 
-  return $o;
+  return $time;
 }
 
 /*
@@ -179,8 +174,7 @@ function nl_fieldSpamTimeCheck() {
     $givenTime = isset($_POST['sp_time']) ? $_POST['sp_time'] : '0';
     $givenTimeHash = isset($_POST['sp_timehash']) ? $_POST['sp_timehash'] : '0';
 
-    $decryptedTime = $givenTime;
-    // decode passed value
+    // check passed value
     if (in_array($algo, hash_hmac_algos())) {
         $hmac = hash_hmac($algo, $_POST['sp_time'], $key);
         // fields was edited?
