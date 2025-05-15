@@ -26,16 +26,6 @@ use PHPMailer\PHPMailer\SMTP;
 //if (isset($_GET['newsletter'])) {
 if (XH_wantsPluginAdministration('newsletter')) {
 
-    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
-        include_once __DIR__ . '/phpmailer/PHPMailer.php';
-    }
-    if (!class_exists('PHPMailer\PHPMailer\Exception')) {
-        include_once __DIR__ . '/phpmailer/Exception.php';
-    }
-    if (!class_exists('PHPMailer\PHPMailer\SMTP')) {
-        include_once __DIR__ . '/phpmailer/SMTP.php';
-    }
-
   if (!isset($_SESSION['NEWSLETTER']['MailSession'])) {
     //session_start();
     $_SESSION['NEWSLETTER']['MailSession'] = "ok";

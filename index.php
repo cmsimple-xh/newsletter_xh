@@ -691,17 +691,6 @@ function newsletter_subscription_mail($subscribermail, $subject, $msg, $link)
 {
     global $plugin_cf, $plugin_tx, $cf, $tx, $pth, $sl, $subscribe_confirmation_mail;
 
-    // PHPMailer
-    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
-        include_once __DIR__ . '/phpmailer/PHPMailer.php';
-    }
-    if (!class_exists('PHPMailer\PHPMailer\Exception')) {
-        include_once __DIR__ . '/phpmailer/Exception.php';
-    }
-    if (!class_exists('PHPMailer\PHPMailer\SMTP')) {
-        include_once __DIR__ . '/phpmailer/SMTP.php';
-    }
-
     $plugin = basename(dirname(__file__), "/");
     $mail = new PHPMailer();
   if (trim($plugin_cf['newsletter']['smtp'])!="") {

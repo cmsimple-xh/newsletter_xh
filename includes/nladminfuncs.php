@@ -49,6 +49,14 @@ function newsletter_Systemcheck($nl_cmsVersionArray, $nl_phpVersion) {
            . ' &#x2192 supported</p>'
            . "\n";
     }
+// check if Phpmailer_XH installed
+    if (function_exists('phpmailer_create')) {
+        $o .= '<p class="xh_success">Phpmailer_XH  is installed, (PHPMailer: '
+            . PHPMailer\PHPMailer\PHPMailer::VERSION
+            . ')</p>';
+    } else {
+        $o .= '<p class="xh_fail">Phpmailer_XH is not installed</p>';
+    }
 // write permissions
     $op_filename_arr = array($pth['file']['plugin_config'],
                              $pth['file']['plugin_stylesheet'],
