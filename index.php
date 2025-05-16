@@ -96,6 +96,9 @@
    
  version 2.5.1
    Spam protection, Honeypot
+   $mail->CharSet = 'UTF-8'; fixed
+   use Phpmailer_XH
+   remove now page splitting (since 1.7.0.) <!--XH_mlx:xxx-->
 */
 
 //Spam protection
@@ -707,13 +710,7 @@ function newsletter_subscription_mail($subscribermail, $subject, $msg, $link)
     else $mail->IsMail(); // telling the class to use mail
   
     //$mail->IsHTML(true);
-    if (trim($plugin_tx['newsletter']['charset'])!="") {
-       $mail->CharSet=$plugin_tx['newsletter']['charset'];
-    }
-    else {
-        if (isset($tx['meta']['codepage'])) //available from cmsimple_XH v 1.2
-            $mail->CharSet=$tx['meta']['codepage'];
-    }
+    $mail->CharSet = 'UTF-8';
     $mail->From = (trim($plugin_cf['newsletter']['from'])=="")?$cf['mailform']['email']:$plugin_cf['newsletter']['from'];
     $mail->FromName = (trim($plugin_cf['newsletter']['from_name'])=="")?$cf['site']['title']:$plugin_cf['newsletter']['from_name'];
     $mail->Subject = $subject;

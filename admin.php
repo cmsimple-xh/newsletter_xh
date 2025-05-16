@@ -245,13 +245,7 @@ if (XH_wantsPluginAdministration('newsletter')) {
             }
         $mail->IsHTML(true);
         $mail->SingleTo=true;
-        if (trim($plugin_tx['newsletter']['charset'])!="") {
-            $mail->CharSet=$plugin_tx['newsletter']['charset'];
-           }
-             else {
-                  if (isset($tx['meta']['codepage'])) 
-                      $mail->CharSet=$tx['meta']['codepage'];
-              }
+        $mail->CharSet = 'UTF-8';
         $mail->From = $_SESSION['NEWSLETTER']['MailFrom'];
         $mail->FromName = $_SESSION['NEWSLETTER']['MailFromName'];
         $mail->AltBody = str_replace("uns=1","uns=".newsleter_convert($newsletter_adminmail,1), $_SESSION['NEWSLETTER']['MailAltBody']);

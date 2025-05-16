@@ -59,7 +59,6 @@ $plugin_tx['newsletter']['subscriber_fields_mandatory']="Please complete all fie
 $plugin_tx['newsletter']['subscriber_fields_empty']="Please complete all fields";
 $plugin_tx['newsletter']['subscriber_email_empty']="Please enter a valid email adress.";
 $plugin_tx['newsletter']['subscriber_email_label']="E-mail adress";
-$plugin_tx['newsletter']['charset']="utf-8";
 $plugin_tx['newsletter']['date_format']="Y-m-d H:i:s";
 $plugin_tx['newsletter']['admin_confirmation_template']="Confirmation template";
 $plugin_tx['newsletter']['cf_separator']="You can have several newsletters on the same page. Only the one over the separator will be send. Default is \"&lt;hr&gt;\".";

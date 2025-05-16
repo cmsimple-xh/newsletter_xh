@@ -62,7 +62,6 @@ $plugin_tx['newsletter']['subscriber_fields_mandatory']="";
 $plugin_tx['newsletter']['subscriber_fields_empty']="";
 $plugin_tx['newsletter']['subscriber_email_empty']="Bitte eine korrekte E-Mail-Adresse angeben.";
 $plugin_tx['newsletter']['subscriber_email_label']="E-Mail-Adresse";
-$plugin_tx['newsletter']['charset']="utf-8";
 $plugin_tx['newsletter']['date_format']="d-m-Y";
 $plugin_tx['newsletter']['cf_separator']="Sie können verschiedene Newsletters auf der selben Seite haben. Nur jener oberhalb des Separators wird verschickt. Standard ist \"&lt;hr&gt;\".";
 $plugin_tx['newsletter']['cf_adminmail']="Die Mail-Adresse um die Test-Mail zu versenden. Wenn leer, wird die Mail-Adresse des CMSimple Kontaktformulars verwendet.";

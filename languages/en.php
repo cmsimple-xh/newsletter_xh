@@ -61,7 +61,6 @@ $plugin_tx['newsletter']['subscriber_fields_mandatory']="Please complete all fie
 $plugin_tx['newsletter']['subscriber_fields_empty']="Please complete all fields";
 $plugin_tx['newsletter']['subscriber_email_empty']="Please enter a valid email adress.";
 $plugin_tx['newsletter']['subscriber_email_label']="E-mail adress";
-$plugin_tx['newsletter']['charset']="utf-8";
 $plugin_tx['newsletter']['date_format']="Y-m-d H:i:s";
 $plugin_tx['newsletter']['cf_separator']="<p>You can have several newsletters on the same page. Only the one over the separator will be send.</p><p>Default is \"&lt;hr&gt;\".</p>";
 $plugin_tx['newsletter']['cf_adminmail']="The mail address where you want to send test mail. If left empty the CMSimple contact form email is used.";
