@@ -244,7 +244,7 @@ function newsletter_confirmation($newspages, $newspage_list, $subscribermail, $s
             $confirm_str = newsleter_convert($confirm_str,1);
             $subscribe .= newsletter_subscription_mail($subscribermail,
                                                        $plugin_tx['newsletter']['subscribe_confirm_subject'],
-                                                       $plugin_tx['newsletter']['subscribe_confirm'],
+                                                       sprintf($plugin_tx['newsletter']['subscribe_confirm'], $np),
                                                        CMSIMPLE_URL . '?newsletterconfirm&cnf=' . $confirm_str);
                                                        //& -> text based e-mail can't handle &amp; // lck/Holger
         }
@@ -722,11 +722,15 @@ function newsletter_subscription_mail($subscribermail, $subject, $msg, $link)
         $confirmation_template_file=$pth['folder']['plugins'].$plugin."/templates/template_confirmation.htm";
     }
     $template=file_get_contents($confirmation_template_file);
-    $link_href="";
-    if ($link!="")
-        $link_href='<a href="'.$link.'">'.$link.'</a>'.'<br>';
+    $link_href = '';
+    if ($link != '')
+        $link_href = '<a href="'
+                   . $link
+                   . '">'
+                   . $plugin_tx['newsletter']['subscribe']
+                   . '</a>';
 //var_dump ($confirmation_template_file);
-    $template=preg_replace('/\{CONTENT\}/',$msg.'<br>'.$link_href,$template);
+    $template = preg_replace('/\{CONTENT\}/', $msg . '<br><br>' . $link_href, $template);
 //var_dump($template);
     
     $mail->MsgHTML($template);

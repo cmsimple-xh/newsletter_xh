@@ -24,7 +24,7 @@ $plugin_tx['newsletter']['subscribe_confirm_text']="Thank you for signing up. To
 $plugin_tx['newsletter']['subscribe_confirmation_mail_error']="Confirmation e-mail was not sent because of an error:";
 $plugin_tx['newsletter']['subscribe_succes_subject']="Thank you for signing up for the newsletter.";
 $plugin_tx['newsletter']['subscribe_confirm_subject']="Please confirm your subscription";
-$plugin_tx['newsletter']['subscribe_confirm']="Thank you for signing up for the newsletter. To confirm your subscription please follow this link:";
+$plugin_tx['newsletter']['subscribe_confirm']="Thank you for signing up for our newsletter <b>%s</b>.<br>To confirm your subscription please follow this link:";
 $plugin_tx['newsletter']['unsubscribe']="Unsubscribe";
 $plugin_tx['newsletter']['unsubscribe_succes']="Your subscription is stopped.";
 $plugin_tx['newsletter']['unsubscribe_not_found']="not found. Please contact us via the <a href=\"%s\">contact form</a> or try again later.";
