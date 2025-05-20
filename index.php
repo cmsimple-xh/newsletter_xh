@@ -101,6 +101,7 @@
    remove now page splitting (since 1.7.0.) <!--XH_mlx:xxx-->
 */
 
+require($pth['folder']['plugins'] . 'newsletter/includes/nlfuncs.php');
 //Spam protection
 if ($plugin_cf['newsletter']['spam_protection'] == 'true') {
     require($pth['folder']['plugins'] . 'newsletter/includes/nlspamfuncs.php');
@@ -112,8 +113,8 @@ use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
 if (isset($_GET['newsletterconfirm'])) {
-    $f='newsletterconfirm';
-    $o.= confirm_subscription();
+    $f = 'newsletterconfirm';
+    $o .= confirmSubscription();
 }
 
 $mail_confirm_subscribtion = $plugin_cf['newsletter']['mail_confirm_subscribtion'];
@@ -190,31 +191,6 @@ function newsletter($newspage_list)
     return $o;
 }
 
-function confirm_subscription()
-{
-    global $mail_confirm_subscribtion, $plugin_cf, $plugin_tx;
-
-    //decrypt;
-    $ky = $plugin_cf['newsletter']['encrypt_key'];
-    if ($ky != '') {
-        $tmp = newsleter_convert($_GET['cnf'],0);
-    } else {
-        $tmp = $_GET['cnf'];
-    }
-    $tmp = explode('¤¤¤', $tmp);
-    $o = '<h1>' . $plugin_tx['newsletter']['subscribe'] . '</h1>';
-    $newspage[] = $tmp[1];
-    $tmp = explode('@@@', $tmp[0]);
-    $subscribermail = $tmp[0];
-    unset($tmp[0]);
-    $tmp = array_values($tmp);
-    // overwrite
-    $mail_confirm_subscribtion = 'thx';
-    $o .= newsletter_AddSubscriberToList($newspage, $subscribermail, $tmp);
-
-    return $o;
-}
-
 function newsletter_confirmation($newspages, $newspage_list, $subscribermail, $subscriberfield) {
 
     global $plugin_tx, $subscribe_confirmation_mail;
@@ -241,7 +217,7 @@ function newsletter_confirmation($newspages, $newspage_list, $subscribermail, $s
             }
             $confirm_str .= '¤¤¤' . $np;
             //encrypt
-            $confirm_str = newsleter_convert($confirm_str,1);
+            $confirm_str = newsletterConvert($confirm_str,1);
             $subscribe .= newsletter_subscription_mail($subscribermail,
                                                        $plugin_tx['newsletter']['subscribe_confirm_subject'],
                                                        $plugin_tx['newsletter']['subscribe_confirm'],
@@ -392,7 +368,7 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
         . ':&nbsp;</span>'
         . '<input name="subscribermail" id="subscribermail" type="text" class="newsletter_inputfield" value="'
         . (isset($_GET['uns'])
-            ? newsleter_convert($_GET['uns'], 0)
+            ? newsletterConvert($_GET['uns'], 0)
             : $subscribermail)
         . '" onblur="newsletter_ValidEmail(document.subscribe);">'
         . '<br>'
@@ -759,37 +735,4 @@ function newsletter_verify_fields($inputs) {
         }
     }
     return true;
-}
-
-// String EnCrypt + DeCrypt function
-// Author: halojoy, July 2006
-// encrypt = 1, decrypt = 0
-function newsleter_convert($str, $encrypt){
-    global $plugin_cf; 
-
-    if (!$encrypt)
-        // decrypt
-        $str = base64_decode(rawurldecode($str));
-    $ky = $plugin_cf['newsletter']['encrypt_key'];
-    if ($ky == '') return $str;
-
-    $ky = str_replace(chr(32), '', $ky);
-    if (strlen($ky) < 8) exit('key error');
-    $kl = strlen($ky) < 32 ? strlen($ky) : 32;
-    $k = array();
-
-    for ($i = 0; $i < $kl; $i++) {
-        $k[$i] = ord($ky[$i])&0x1F;
-    }
-    $j = 0;
-    for ($i = 0; $i < strlen($str); $i++) {
-        $e = ord($str[$i]); 
-        $str[$i] = $e&0xE0 ? chr($e^$k[$j]) : chr($e);
-        $j++;
-        $j = $j == $kl ? 0 : $j;
-    }
-    if ($encrypt)
-        // encrypt
-        $str = rawurlencode(base64_encode($str));
-    return $str;
 }
