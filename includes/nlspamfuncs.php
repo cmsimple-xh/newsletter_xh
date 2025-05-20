@@ -56,13 +56,12 @@ function nl_renderFormField($name,
 
     global $plugin_tx;
 
-    $o = '<br>'
-       . ($type != 'hidden'
-            ? '<span class="newsletter_label newsletter_noeyes">'
+    $o = ($type != 'hidden'
+            ? '<br><span class="newsletter_label newsletter_noeyes">'
                . $plugin_tx['newsletter'][$ptxPart2]
                . '</span>'
+               . "\n"
             : '')
-       . "\n"
        . '<input'
        . ($placeholder
             ? ' placeholder="' . $plugin_tx['newsletter'][$ptxPart2] . '"'
