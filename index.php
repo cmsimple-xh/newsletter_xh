@@ -274,10 +274,10 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
     
         function hideFields(vfield) {
         if (vfield.selectedIndex == 1) { 
-            document.getElementById(\'userinput\').style.visibility=\'hidden\';
+            document.getElementById(\'userinput\').style.display=\'none\';
         } 
         else {
-            document.getElementById(\'userinput\').style.visibility=\'visible\';
+            document.getElementById(\'userinput\').style.display=\'block\';
         }
     }
 
@@ -332,7 +332,7 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
         . "\n"
         . '<div id="err">&nbsp;</div>';
     if (isset($_GET['uns'])) {
-        $o .= '<select name="adddel" id="addel" style="visibility:hidden">'
+        $o .= '<select name="adddel" id="addel" style="display: none;">'
             . "\n"
             . '<option>'
             . $ptx['subscribe']

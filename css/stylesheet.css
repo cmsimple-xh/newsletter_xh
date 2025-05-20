@@ -73,7 +73,8 @@
     padding: 0.25em 0.5em;
     font-size: 1em;
 }
-.newsletter_noeyes {
+.newsletter_noeyes,
+.newsletter_noeyes ~ br {
     /*visibility: hidden;*/
     display: none;
 }
