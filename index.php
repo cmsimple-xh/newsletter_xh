@@ -101,7 +101,7 @@
    remove now page splitting (since 1.7.0.) <!--XH_mlx:xxx-->
 */
 
-require($pth['folder']['plugins'] . 'newsletter/includes/nlfuncs.php');
+require_once($pth['folder']['plugins'] . 'newsletter/includes/nlfuncs.php');
 //Spam protection
 if ($plugin_cf['newsletter']['spam_protection'] == 'true') {
     require($pth['folder']['plugins'] . 'newsletter/includes/nlspamfuncs.php');

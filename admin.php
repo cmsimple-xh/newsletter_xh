@@ -17,6 +17,7 @@
 */
 
 require($pth['folder']['plugins'] . 'newsletter/includes/nladminfuncs.php');
+require_once($pth['folder']['plugins'] . 'newsletter/includes/nlfuncs.php');
 
 // PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
@@ -248,13 +249,13 @@ if (XH_wantsPluginAdministration('newsletter')) {
         $mail->CharSet = 'UTF-8';
         $mail->From = $_SESSION['NEWSLETTER']['MailFrom'];
         $mail->FromName = $_SESSION['NEWSLETTER']['MailFromName'];
-        $mail->AltBody = str_replace("uns=1","uns=".newsleter_convert($newsletter_adminmail,1), $_SESSION['NEWSLETTER']['MailAltBody']);
+        $mail->AltBody = str_replace("uns=1","uns=".newsletterConvert($newsletter_adminmail,1), $_SESSION['NEWSLETTER']['MailAltBody']);
         
         // END Init phpmailer
         $reciver_list = "<br>";
         if ($newsletter_test) { // send test mail to admin
             
-            $mail->MsgHTML(str_replace("uns=1","uns=".newsleter_convert($newsletter_adminmail,1), $template_preview_send));
+            $mail->MsgHTML(str_replace("uns=1","uns=".newsletterConvert($newsletter_adminmail,1), $template_preview_send));
           $mail->AddAddress($newsletter_adminmail, $newsletter_adminmail);
           $mail->Subject=$newsletter_subject;
           if ($newsletter_attachment != "no") 
@@ -314,8 +315,8 @@ if (XH_wantsPluginAdministration('newsletter')) {
                         $template=preg_replace('/\{TEXTFIELD_'.($ri).'\}/',$tmp[$ri],$template);
                        }
                        $template=preg_replace('/\{TEXTFIELD_.*\}/',"",$template);  // remove unused text fields
-                $mail->AltBody = str_replace("uns=1","uns=".newsleter_convert($tmp[0],1), $_SESSION['NEWSLETTER']['MailAltBody']);
-                        $mail->MsgHTML(str_replace("uns=1","uns=".newsleter_convert($tmp[0],1), $template)); //insert unsubscribe link
+                $mail->AltBody = str_replace("uns=1","uns=".newsletterConvert($tmp[0],1), $_SESSION['NEWSLETTER']['MailAltBody']);
+                        $mail->MsgHTML(str_replace("uns=1","uns=".newsletterConvert($tmp[0],1), $template)); //insert unsubscribe link
                         
                 if (!$mail->Send()) {
                   $mailsendresult=$plugin_tx['newsletter']['log_error']."&nbsp;".rmanl($newsletter_fc[$i])." (".date($plugin_tx['newsletter']['date_format']).") Error: " . /*$mail->error_count*/'' . "&nbsp;".$plugin_tx['newsletter']['msg_error'].":&nbsp;(" .$mail->ErrorInfo.")";
@@ -358,7 +359,7 @@ if (XH_wantsPluginAdministration('newsletter')) {
       if ($newsletter_submit == '' || $newsletter_test != '') {
         $newsletter_t .= 
               '<table border="0">'
-              .'<tr><td colspan="2" class="newsletter_code">'.str_replace("uns=1",("uns=".newsleter_convert($newsletter_adminmail,1)), $template_preview /*$newsletter_body[0]*/).'</td></tr>'
+              .'<tr><td colspan="2" class="newsletter_code">'.str_replace("uns=1",("uns=".newsletterConvert($newsletter_adminmail,1)), $template_preview /*$newsletter_body[0]*/).'</td></tr>'
               .'</table>';
       }
     } // END - ACTION: publish
