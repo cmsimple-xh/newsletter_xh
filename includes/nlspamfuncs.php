@@ -21,7 +21,7 @@
  *
  * return void
  */
-function nl_XH_logMessage($failmessage) {
+function newsletterXH_logMessage($failmessage) {
 
     XH_logMessage('warning',
                   'Newsletter_XH',
@@ -34,7 +34,7 @@ function nl_XH_logMessage($failmessage) {
  *
  * return html
  */
-function nl_renderErrorMessage($ptxPart2) {
+function newsletterRenderErrorMessage($ptxPart2) {
 
     global $plugin_tx;
 
@@ -48,11 +48,11 @@ function nl_renderErrorMessage($ptxPart2) {
  *
  * return html
  */
-function nl_renderFormField($name,
-                            $type,
-                            $value,
-                            $ptxPart2 = '',
-                            $placeholder = false) {
+function newsletterRenderFormField($name,
+                                   $type,
+                                   $value,
+                                   $ptxPart2 = '',
+                                   $placeholder = false) {
 
     global $plugin_tx;
 
@@ -86,13 +86,13 @@ function nl_renderFormField($name,
  *
  * return html
  */
-function nl_fieldHoneypotDisplay() {
+function newsletterFieldHoneypotDisplay() {
 
-    return nl_renderFormField('hp-subject',
-                              'text',
-                              '',
-                              'field_leave_blank',
-                              'field_leave_blank');
+    return newsletterRenderFormField('hp-subject',
+                                     'text',
+                                     '',
+                                     'field_leave_blank',
+                                     'field_leave_blank');
 }
 
 /*
@@ -100,13 +100,13 @@ function nl_fieldHoneypotDisplay() {
  *
  * return bool
  */
-function nl_fieldHoneypotCheck() {
+function newsletterFieldHoneypotCheck() {
 
     if (!empty($_POST['hp-subject'])) {
         $failmessage = 'Honeypot';
-        nl_XH_logMessage($failmessage);
+        newsletterXH_logMessage($failmessage);
         $ptxPart2 = 'info_spam_suspicious';
-        return nl_renderErrorMessage($ptxPart2);
+        return newsletterRenderErrorMessage($ptxPart2);
     }
 
     return false;
@@ -117,7 +117,7 @@ function nl_fieldHoneypotCheck() {
  *
  * return string
  */
-function nl_generateTimeHash($time) {
+function newsletterGenerateTimeHash($time) {
 
     global $cf;
 
@@ -139,16 +139,16 @@ function nl_generateTimeHash($time) {
  *
  * return html
  */
-function nl_fieldSpamTimeDisplay() {
+function newsletterFieldSpamTimeDisplay() {
 
     $time= time();
 
-    $o = nl_renderFormField('sp_time',
-                            'hidden',
-                            $time);
-    $o .= nl_renderFormField('sp_timehash',
-                             'hidden',
-                             nl_generateTimeHash($time));
+    $o = newsletterRenderFormField('sp_time',
+                                   'hidden',
+                                   $time);
+    $o .= newsletterRenderFormField('sp_timehash',
+                                    'hidden',
+                                    newsletterGenerateTimeHash($time));
 
     return $o;
 }
@@ -158,7 +158,7 @@ function nl_fieldSpamTimeDisplay() {
  *
  * return bool
  */
-function nl_fieldSpamTimeCheck() {
+function newsletterFieldSpamTimeCheck() {
 
     global $cf, $plugin_cf;
 
@@ -188,18 +188,18 @@ function nl_fieldSpamTimeCheck() {
     }
     if ($timeManipulated) {
         $failmessage = 'The Time field has been manipulated.';
-        nl_XH_logMessage($failmessage);
+        newsletterXH_logMessage($failmessage);
         $ptxPart2 = 'info_spam_suspicious';
-        return nl_renderErrorMessage($ptxPart2);
+        return newsletterRenderErrorMessage($ptxPart2);
     }
     // check whether the transferred value could be checked
     $currentTime = time();
     if (($currentTime - (int)$_POST['sp_time']) <= $minTime
     || ($currentTime - (int)$_POST['sp_time']) >= $maxTime ) {
         $failmessage = 'The submission is outside from the specified time frame.';
-        nl_XH_logMessage($failmessage);
+        newsletterXH_logMessage($failmessage);
         $ptxPart2 = 'info_spam_suspicious';
-        return nl_renderErrorMessage($ptxPart2);
+        return newsletterRenderErrorMessage($ptxPart2);
     }
 
     return false;

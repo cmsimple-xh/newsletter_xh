@@ -24,6 +24,10 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
+if (function_exists('XH_registerStandardPluginMenuItems')) {
+    XH_registerStandardPluginMenuItems(true);
+}
+
 //if (isset($_GET['newsletter'])) {
 if (XH_wantsPluginAdministration('newsletter')) {
 
@@ -51,7 +55,7 @@ if (XH_wantsPluginAdministration('newsletter')) {
     }
 
   if ($newspage=="") {
-      newsletter_mailinglist($c, $h, $l, $newspage, ""); //preset $newspage (activ mailing list)
+      newsletterMailinglist($c, $h, $l, $newspage, ""); //preset $newspage (activ mailing list)
   }
   else {
       $newspage=str_replace("_"," ",$newspage);
@@ -60,21 +64,21 @@ if (XH_wantsPluginAdministration('newsletter')) {
   if ($admin == '' || $admin == 'plugin_main') {
     $newsletter_t .= '<div id="newsletter-publish">';
     $newsletter_t .= '<table class="edit" style="width: 100%;"><tr>';
-    $newsletter_t .= '<td><a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=publish'.'&amp;nlp='.rswu($newspage).'">';
+    $newsletter_t .= '<td><a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=publish'.'&amp;nlp='.newsletterUnderline4Spaces($newspage).'">';
     $newsletter_t .= $plugin_tx['newsletter']['publish'].'</a></td>';
     $newsletter_t .= '<td><a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=subscribers'.'&amp;nlp=';
-    $newsletter_t .= rswu($newspage) . '">' . $plugin_tx['newsletter']['admin_subscribers'];
+    $newsletter_t .= newsletterUnderline4Spaces($newspage) . '">' . $plugin_tx['newsletter']['admin_subscribers'];
     $newsletter_t .= '</a></td><td>  <a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=template'.'&amp;nlp=';
-    $newsletter_t .= rswu($newspage) . '">' . $plugin_tx['newsletter']['admin_template'];
+    $newsletter_t .= newsletterUnderline4Spaces($newspage) . '">' . $plugin_tx['newsletter']['admin_template'];
     if ($plugin_cf['newsletter']['mail_confirm_subscribtion']!="no" ||     $plugin_cf['newsletter']['mail_confirm_unsubscribtion']!="no"){
         $newsletter_t .= '</a></td><td>  <a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=confirm'.'&amp;nlp=';
-        $newsletter_t .= rswu($newspage) . '">' . $plugin_tx['newsletter']['admin_confirmation_template'];
+        $newsletter_t .= newsletterUnderline4Spaces($newspage) . '">' . $plugin_tx['newsletter']['admin_confirmation_template'];
     }
     $newsletter_t .= '</a></td><td>  <a href="'.$sn.'?'.$plugin.'&amp;admin=plugin_main'.'&amp;action=log'.'&amp;nlp=';
-    $newsletter_t .= rswu($newspage) . '">' . $plugin_tx['newsletter']['admin_log'];
+    $newsletter_t .= newsletterUnderline4Spaces($newspage) . '">' . $plugin_tx['newsletter']['admin_log'];
     $newsletter_t .= '</a></td></tr></table>';
     
-    $newsletter_t .= newsletter_template_file($pth,$plugin,$sl,$newspage,$newsletter_template_file);
+    $newsletter_t .= newsletterTemplateFile($pth,$plugin,$sl,$newspage,$newsletter_template_file);
     $template=file_get_contents($newsletter_template_file);
     if ($action == 'publish') {
         if (trim($newsletter_adminmail) == '') {
@@ -86,7 +90,7 @@ if (XH_wantsPluginAdministration('newsletter')) {
             $newsletter_subject = sprintf($plugin_tx['newsletter']['newsletter_subject'],
                                           sv('SERVER_NAME'));
         }
-        $newsletter_t .= newsletter_mailinglist($c, $h, $l, $newspage, $action); // list of mailing list
+        $newsletter_t .= newsletterMailinglist($c, $h, $l, $newspage, $action); // list of mailing list
         $newsletter_s = array_search($newspage, $h);
         $nlBodyArray = explode($plugin_cf['newsletter']['separator'], $c[$newsletter_s]);
         $patternArray = array('/.*?<!--XH_ml[1-9]:.*?-->/isu',
@@ -97,7 +101,7 @@ if (XH_wantsPluginAdministration('newsletter')) {
         $newsletter_unreadable = '';
         if (trim($plugin_tx['newsletter']['unreadable']) != '') {
           $newsletter_unreadable = '<a href="'
-                                 . newsletter_headpath($h, $l, $newspage)
+                                 . newsletterHeadPath($h, $l, $newspage)
                                  . '">'
                                  . $plugin_tx['newsletter']['unreadable']
                                  . '</a>';
@@ -145,7 +149,7 @@ if (XH_wantsPluginAdministration('newsletter')) {
                                . '?'
                                . $plugin
                                . '&amp;admin=plugin_main&amp;action=publish&amp;submit=sendmail&amp;nlp='
-                               . rswu($newspage)
+                               . newsletterUnderline4Spaces($newspage)
                                . '" method="post">'
                                . "\n";
                 $newsletter_t .= '<table border="0">'
@@ -175,7 +179,7 @@ if (XH_wantsPluginAdministration('newsletter')) {
                                . '</div></div>'
                                . $plugin_tx['newsletter']['attachment']
                                . '</td>' . "\n" .'<td>'
-                               . newsletter_attachmentslist($newsletter_attachment)
+                               . newsletterAttachmentslist($newsletter_attachment)
                                . '</td>' . "\n" . '</tr>' . "\n";
                 $newsletter_t .= '<tr>' . "\n" . '<td>'
                                . '<div class="pl_tooltip"><img src = "'
@@ -224,7 +228,7 @@ if (XH_wantsPluginAdministration('newsletter')) {
       
       $_SESSION['NEWSLETTER']['MailFromName'] = (trim($plugin_cf['newsletter']['from_name']) == "")? $tx['site']['title']:$plugin_cf['newsletter']['from_name'];
      
-      $_SESSION['NEWSLETTER']['MailAltBody'] = $plugin_tx['newsletter']['alt_body'].newsletter_headpath($h, $l, $newspage)."\r\n".$plugin_tx['newsletter']['alt_footer']."\r\n\r\n".$plugin_tx['newsletter']['alt_unsubscribe'].$_SESSION['subscribe_page'];
+      $_SESSION['NEWSLETTER']['MailAltBody'] = $plugin_tx['newsletter']['alt_body'].newsletterHeadPath($h, $l, $newspage)."\r\n".$plugin_tx['newsletter']['alt_footer']."\r\n\r\n".$plugin_tx['newsletter']['alt_unsubscribe'].$_SESSION['subscribe_page'];
       $_SESSION['NEWSLETTER']['MailHTMLBody'] = $template;
       if ($newsletter_submit != '') { // send email to all subscribers or test email to administrator
         // Init phpmailer
@@ -275,13 +279,13 @@ if (XH_wantsPluginAdministration('newsletter')) {
                   //$_SESSION['subscribe_page']=$newsletter_sbp;           // restore 
         } // end test mail
               else { // send all
-          $location_str = (isset($_SERVER['HTTPS']) ? "https" : "http")."://".$_SERVER['HTTP_HOST'].$sn."?newsletter&amp;submit=sendmail&amp;admin=plugin_main&amp;action=publish&amp;nlp=".rswu($newspage); 
+          $location_str = (isset($_SERVER['HTTPS']) ? "https" : "http")."://".$_SERVER['HTTP_HOST'].$sn."?newsletter&amp;submit=sendmail&amp;admin=plugin_main&amp;action=publish&amp;nlp=".newsletterUnderline4Spaces($newspage); 
           if (!isset($_SESSION['NEWSLETTER']['MailCount'])) {
             $hjs .= '<meta http-equiv="refresh" content="2;url='.$location_str.'">';
               $_SESSION['NEWSLETTER']['MailCount'] = 0;
-            $_SESSION['NEWSLETTER']['MailingList'] = $pth['folder']['plugins']."newsletter/data/subscribe_".rswu($newspage).".txt";
-            newsletter_copy_logfile($pth['folder']['plugins']."newsletter/data/log_",rswu($newspage));
-            $_SESSION['NEWSLETTER']['LogFile'] = $pth['folder']['plugins']."newsletter/data/log_".rswu($newspage).".txt";
+            $_SESSION['NEWSLETTER']['MailingList'] = $pth['folder']['plugins']."newsletter/data/subscribe_".newsletterUnderline4Spaces($newspage).".txt";
+            newsletterCopyLogFile($pth['folder']['plugins']."newsletter/data/log_",newsletterUnderline4Spaces($newspage));
+            $_SESSION['NEWSLETTER']['LogFile'] = $pth['folder']['plugins']."newsletter/data/log_".newsletterUnderline4Spaces($newspage).".txt";
             $_SESSION['NEWSLETTER']['MailSendResult'] = "";
             $_SESSION['NEWSLETTER']['MailSendErrors'] = 0;
             $_SESSION['NEWSLETTER']['MailSubject'] = $newsletter_subject;
@@ -366,16 +370,16 @@ if (XH_wantsPluginAdministration('newsletter')) {
     else {
           switch ($action) {
               case 'subscribers': 
-                  $newsletter_t .= newsletter_adminSubscribers($c, $h, $l, $newsletter_submit, $newspage, $action);
+                  $newsletter_t .= newsletterAdminSubscribers($c, $h, $l, $newsletter_submit, $newspage, $action);
                   break;
               case 'log': 
-                  $newsletter_t .= newsletter_adminLog($c, $h, $l, $newsletter_submit, $newspage, $action);
+                  $newsletter_t .= newsletterAdminLog($c, $h, $l, $newsletter_submit, $newspage, $action);
                   break;
               case 'template': 
-                  $newsletter_t .= newsletter_adminTemplate($c, $h, $l, $newsletter_submit, $newspage, $newsletter_template_file, $action);
+                  $newsletter_t .= newsletterAdminTemplate($c, $h, $l, $newsletter_submit, $newspage, $newsletter_template_file, $action);
                   break;
               case 'confirm': 
-                  $newsletter_t .= confirmatinon_adminTemplate($c, $h, $l, $newsletter_submit, $newspage, $action);
+                  $newsletter_t .= newsletterConfirmAdminTemplate($c, $h, $l, $newsletter_submit, $newspage, $action);
                   break;
               default:
                   $newsletter_t .= "";
@@ -422,7 +426,7 @@ if (XH_wantsPluginAdministration('newsletter')) {
                        . '</p>'
                        . "\n";
         $newsletter_t .= '<hr>' . "\n";
-        $newsletter_t .= newsletter_Systemcheck($nl_cmsVersionArray, $nl_phpVersion);
+        $newsletter_t .= newsletterSystemcheck($nl_cmsVersionArray, $nl_phpVersion);
         $newsletter_t .= '</div>' . "\n";
     }
     // END - ADMIN
@@ -432,7 +436,7 @@ if (XH_wantsPluginAdministration('newsletter')) {
 }
 // END - newsletter
 
-function newsletter_mailinglist($c, $h, $l, &$newspage, $action)
+function newsletterMailinglist($c, $h, $l, &$newspage, $action)
 {
   global $plugin, $n, $pth, $cf, $plugin_tx, $plugin_cf, $l, $cl, $pd_router, $sn;
  
@@ -470,7 +474,7 @@ foreach ($c as $i) {
         $np = trim($np);
         if (!empty($np)) {
             $t .= $np . '@@@';
-            array_push($subscribe_pages, newsletter_headpath($h, $l, $h[$count] ?? ''));
+            array_push($subscribe_pages, newsletterHeadPath($h, $l, $h[$count] ?? ''));
         }
     }
     ++$count;
@@ -520,7 +524,7 @@ foreach ($c as $i) {
                                . '&amp;admin=plugin_main&amp;action='
                                . $action
                                . '&amp;nlp='
-                               . rswu($i)
+                               . newsletterUnderline4Spaces($i)
                                . '">'
                                . $i
                                . '</a>'
@@ -536,7 +540,7 @@ foreach ($c as $i) {
     }
 }
 
-function newsletter_attachmentslist($attachment)
+function newsletterAttachmentslist($attachment)
 { 
     global $plugin_cf, $pth, $plugin;
     
@@ -561,17 +565,17 @@ function newsletter_attachmentslist($attachment)
     return $att_list;
 }                
 
-function newsletter_adminSubscribers($c, $h, $l, $newsletter_submit, $newspage, $action)
+function newsletterAdminSubscribers($c, $h, $l, $newsletter_submit, $newspage, $action)
 {
     global $pth, $plugin, $plugin_tx, $tx, $sn;
 
-    $newsletter_t = newsletter_mailinglist($c, $h, $l, $newspage, $action)
+    $newsletter_t = newsletterMailinglist($c, $h, $l, $newspage, $action)
                   . '<br>';
 
     if ($newsletter_submit != ''
     && $fh = @fopen($pth['folder']['plugins']
            . 'newsletter/data/subscribe_'
-           . rswu($newspage)
+           . newsletterUnderline4Spaces($newspage)
            . '.txt', 'w'))  {
 
         $subscribers = isset($_POST['subscribers'])
@@ -582,7 +586,7 @@ function newsletter_adminSubscribers($c, $h, $l, $newsletter_submit, $newspage, 
             $newsletter_t .= '<strong>File saved: '
                            . $pth['folder']['plugins']
                            . 'newsletter/data/subscribe_'
-                           . rswu($newspage)
+                           . newsletterUnderline4Spaces($newspage)
                            . '</strong><br>';
         } else {
             $newsletter_t .= 'Error, not saved: ';
@@ -591,9 +595,9 @@ function newsletter_adminSubscribers($c, $h, $l, $newsletter_submit, $newspage, 
     }
     $newsletter_t .= $plugin_tx['newsletter']['recivercount']
                    . ':&nbsp;'
-                   . newsletter_subscribersCount($pth['folder']['plugins']
+                   . newsletterSubscribersCount($pth['folder']['plugins']
                    . 'newsletter/data/subscribe_'
-                   . rswu($newspage)
+                   . newsletterUnderline4Spaces($newspage)
                    . '.txt')
                    . '<hr>'
                    . '<form action="'
@@ -601,7 +605,7 @@ function newsletter_adminSubscribers($c, $h, $l, $newsletter_submit, $newspage, 
                    . '?'
                    . $plugin
                    . '&amp;admin=plugin_main&amp;action=subscribers&amp;submit=save&amp;nlp='
-                   . rswu($newspage)
+                   . newsletterUnderline4Spaces($newspage)
                    . '" method="post">'
                    . '<input type="submit" class="newsletter_submit" value="'
                    . $tx['action']['save']
@@ -609,11 +613,11 @@ function newsletter_adminSubscribers($c, $h, $l, $newsletter_submit, $newspage, 
                    . '<textarea class="newsletter_textarea" name="subscribers">'
                    . (is_readable($pth['folder']['plugins']
                    . 'newsletter/data/subscribe_'
-                   . rswu($newspage)
+                   . newsletterUnderline4Spaces($newspage)
                    . '.txt')
                         ? rmnl(file_get_contents($pth['folder']['plugins']
                         . 'newsletter/data/subscribe_'
-                        . rswu($newspage)
+                        . newsletterUnderline4Spaces($newspage)
                         . '.txt'))
                         : '')
                    . '</textarea>&nbsp;'
@@ -626,10 +630,10 @@ function newsletter_adminSubscribers($c, $h, $l, $newsletter_submit, $newspage, 
     return $newsletter_t;
 } // END - adminSubscribers
 
-function newsletter_template_file($pth,$plugin,$sl,$newspage,&$newsletter_template_file){
+function newsletterTemplateFile($pth,$plugin,$sl,$newspage,&$newsletter_template_file){
         
     $errmsg = "";
-    $newsletter_template_file=$pth['folder']['plugins'].$plugin."/templates/".$sl."_".rswu($newspage)."_template.htm";
+    $newsletter_template_file=$pth['folder']['plugins'].$plugin."/templates/".$sl."_".newsletterUnderline4Spaces($newspage)."_template.htm";
     if (!file_exists($newsletter_template_file)) {
         $master=$pth['folder']['plugins'].$plugin."/templates/".$sl."_template.htm";
         if (!file_exists($master))
@@ -644,11 +648,11 @@ function newsletter_template_file($pth,$plugin,$sl,$newspage,&$newsletter_templa
     return $errmsg;
 }
 
-function confirmatinon_adminTemplate($c, $h, $l, $newsletter_submit, $newspage, $action)
+function newsletterConfirmAdminTemplate($c, $h, $l, $newsletter_submit, $newspage, $action)
 {
   global $pth, $tx, $sl, $sn, $plugin;
   
-    $newsletter_t = newsletter_mailinglist($c, $h, $l, $newspage, $action).'<br>'; 
+    $newsletter_t = newsletterMailinglist($c, $h, $l, $newspage, $action).'<br>'; 
   $msg = "<strong>File: </strong>";
     $confirmation_template_file=$pth['folder']['plugins'].$plugin."/templates/".$sl."_template_confirmation.htm";
     if (!file_exists($confirmation_template_file)) {
@@ -675,7 +679,7 @@ function confirmatinon_adminTemplate($c, $h, $l, $newsletter_submit, $newspage, 
     $template=file_get_contents($confirmation_template_file);
   $newsletter_t .= "<br>".'<form action="'.$sn.'?'.$plugin.
     '&amp;admin=plugin_main&amp;action=confirm&amp;submit=save&amp;nlp='.
-    rswu($newspage).'" method="post">' . '<input type="submit" class="newsletter_submit" value="'.
+    newsletterUnderline4Spaces($newspage).'" method="post">' . '<input type="submit" class="newsletter_submit" value="'.
     $tx['action']['save'].'">';
     if (function_exists('XH_hsc')) {
         $newsletter_t.='<textarea class="newsletter_textarea" name="template">'.XH_hsc($template).'</textarea>';
@@ -688,11 +692,11 @@ function confirmatinon_adminTemplate($c, $h, $l, $newsletter_submit, $newspage, 
   return $newsletter_t;
 } // END - confirmatinon_adminTemplate
 
-function newsletter_adminTemplate($c, $h, $l, $newsletter_submit, $newspage, $template_file, $action)
+function newsletterAdminTemplate($c, $h, $l, $newsletter_submit, $newspage, $template_file, $action)
 {
   global $pth, $tx, $sl, $sn, $plugin;
   
-  $newsletter_t = newsletter_mailinglist($c, $h, $l, $newspage, $action).'<br>';
+  $newsletter_t = newsletterMailinglist($c, $h, $l, $newspage, $action).'<br>';
   $msg = "<strong>File: </strong>";
   if ($newsletter_submit != '' and $fh = @fopen($template_file, "w")) {
         $template=isset($_POST['template']) ? $_POST['template'] : $_GET['template'];
@@ -707,7 +711,7 @@ function newsletter_adminTemplate($c, $h, $l, $newsletter_submit, $newspage, $te
   $newsletter_t .= $msg. $template_file;
     $template=file_get_contents($template_file);
   $newsletter_t .= "<br>".'<form action="'.$sn.'?'.$plugin.'&amp;admin=plugin_main&amp;action=template&amp;submit=save&amp;nlp='.
-    rswu($newspage).'" method="post">' . '<input type="submit" class="newsletter_submit" value="'.$tx['action']['save'].'">';
+    newsletterUnderline4Spaces($newspage).'" method="post">' . '<input type="submit" class="newsletter_submit" value="'.$tx['action']['save'].'">';
     if (function_exists('XH_hsc')) {
         $newsletter_t .='<textarea class="newsletter_textarea" name="template">'.XH_hsc($template).    '</textarea>';
     }
@@ -719,13 +723,13 @@ function newsletter_adminTemplate($c, $h, $l, $newsletter_submit, $newspage, $te
   return $newsletter_t;
 } // END - adminTemplate
 
-function newsletter_adminLog($c, $h, $l, $newsletter_submit, $newspage, $action)
+function newsletterAdminLog($c, $h, $l, $newsletter_submit, $newspage, $action)
 {
   global $pth, $plugin, $plugin_cf, $plugin_tx, $tx, $sn;
   
-  $newsletter_t = newsletter_mailinglist($c, $h, $l, $newspage, $action).'<br>';
+  $newsletter_t = newsletterMailinglist($c, $h, $l, $newspage, $action).'<br>';
     
-    $fn=$pth['folder']['plugins']."newsletter/data/log_".rswu($newspage).".txt";
+    $fn=$pth['folder']['plugins']."newsletter/data/log_".newsletterUnderline4Spaces($newspage).".txt";
   
   if ($newsletter_submit != '' and $fh = @fopen($fn, "w"))
   {
@@ -736,7 +740,7 @@ function newsletter_adminLog($c, $h, $l, $newsletter_submit, $newspage, $action)
             $newsletter_t .= "error, not saved: ";        
     fclose($fh);
   }
-  $newsletter_t .= "<hr>".'<form action="'.$sn.'?'.$plugin.'&amp;admin=plugin_main&amp;action=log&amp;submit=save&amp;nlp='.rswu($newspage).'" method="post">' . 
+  $newsletter_t .= "<hr>".'<form action="'.$sn.'?'.$plugin.'&amp;admin=plugin_main&amp;action=log&amp;submit=save&amp;nlp='.newsletterUnderline4Spaces($newspage).'" method="post">' . 
         '<input type="submit" class="newsletter_submit" value="'.$tx['action']['save'].'">';
     if (is_readable($fn)) {
         if (function_exists('XH_hsc')) {
@@ -750,7 +754,7 @@ function newsletter_adminLog($c, $h, $l, $newsletter_submit, $newspage, $action)
   return $newsletter_t;
 } // END - adminLog
 
-function newsletter_subscribersCount($f)
+function newsletterSubscribersCount($f)
 {
     $count=0;
     if (is_readable($f)) {
@@ -762,7 +766,7 @@ function newsletter_subscribersCount($f)
     return $count;
 }
 
-function newsletter_headpath($h, $l, $page) {
+function newsletterHeadPath($h, $l, $page) {
 
     global $cf, $cl, $u;
 
@@ -778,7 +782,7 @@ function newsletter_headpath($h, $l, $page) {
     return $o;
 }
 
-function newsletter_copy_logfile($logfile, $nln) {
+function newsletterCopyLogFile($logfile, $nln) {
 
     $arr = array();
     $numofcopies = 3;
@@ -796,8 +800,4 @@ function newsletter_copy_logfile($logfile, $nln) {
             unlink($arr[$i]);
         }
     }
-}
-
-if (function_exists('XH_registerStandardPluginMenuItems')) {
-    XH_registerStandardPluginMenuItems(true);
 }

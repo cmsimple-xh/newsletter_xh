@@ -14,91 +14,6 @@
  * @copyright 2025 The CMSimple_XH developers <http://cmsimple-xh.org/?The_Team>
  * @author    The CMSimple_XH developers <devs@cmsimple-xh.org>
  * @license    GNU GPLv3 - http://www.gnu.org/licenses/gpl-3.0.en.html
-
-    Requirements: The plugin loader must be installed.
-    Disclaimer: No warranties.
-    Acknowledgement:
-    Newsletter idea is partly based on plugin GenizNewsletter
-    
-    History:
-    version 1.1 january 2010
-    some corrections of absolute path in unsubscribe and text mails and urencoding of path.
-    version 1.2 january 2010
-    more corrections of absolute path in unsubscribe and text mails.
-    version 1.3 february 2010
-    added charset in config.php (if empty then deafult=iso-8859-1
-    It's possible to use headers whith <h4> and above
-    added style for legend. 
-    version 1.4 february 2010
-    bug fix   
-    version 1.5 february 2010
-    bug fix (utf-8 correction of confirmation mail and encoding of unsubscribe link by Frank Z.)
-    version 1.6 february 2010
-    added user confirmation of subscription
-    version 1.7 february 2010
-    minor bug fixed. Some html line breaks moved to language files.  
-    version 1.8  may 2010
-    added urlencoding of subscription string when "mail confirm subscription" is set to "user".
-    version 1.9  may 2010
-    added user email adress to unsubscription link in newsletter
-    version 2.0 may 2010
-    fixed compatilbility issues with pd_scripting plugin. Calls to newsletter can be inserted through 
-    pd_scripting
-
-    Version 2.1.0
-    added link to newsleter if the mail is not redable in users mail client. Text defined in $plugin_tx['newsletter']['unreadable'] is converted to a link to newsletter page. To deactivate leave $plugin_tx['newsletter']['unreadable'] empty or remove {NOT_READABLE} from the template.
-    Optimized to use with pd_scripting
-    changed if charset is empty then cmsimple default codepage is used.
-
-    added user defined text fields in subscription record  (subscriber_fields_label).
-    Newsletter attacment are stored in downloads directory
-    
-    version 2.1.1 
-    fixed problems on some servers with magic quotes. eregi replaced by stristr
-    
-    version    2.1.2
-    bug fix eregi fix overwrited
-    
-    version 2.1.3  February 2011
-    eregi replaced by stristr again
-    
-    version 2.2.0 
-    Added template for subscription and unsubscription confirmation mail. Released under Linkware and Commercial License
-    version 2.2.1
-    IE bug fix in admin php
-    version 2.3.0 October 2012
-    Added subscription to severall newsletters in one call.
-    PhpMailer updated to version 5.2.1 , no changes applied to file class.phpmailer.php
-    Updated subscribe messages. 
-    version 2.3.1 October 2012
-        Minor bug fix in file admin.php, $mail->ClearAddresses() moved to end of the loop
-    version 2.3.2 
-        added recognition of relative urls and conversion to absolute urls
-        changed logging. Each shipment of newsletter is loged in a separate file. Old logs are copied to files with a time stamps. Until 5 copies are stored. The latest log file can be accessed trough plugin admin. Copies are only accessible trough ftp. 
-        compatiblity with CMSimple_XH ver. 1.6.
-    
-  version 2.3.3
-   added possibility for authentification on smtp servers that requires it.
-   enabled for CMSimple 1.6.x plugin calls {{{newsletter('....');}}}
-   addet server authentication variables in config.php
-   
- version 2.4.0
-  php 7 ready
-  
- version 2.4.1
-  minor bugs fix
-  
- version 2.4.2
-   updated to CMSimple XH version 1.7
-   
- version 2.5.0
-   updated to CMSimple XH version 1.8
-   
- version 2.5.1
-   Spam protection, Honeypot
-   $mail->CharSet = 'UTF-8'; fixed
-   use Phpmailer_XH
-   remove now page splitting (since 1.7.0.) <!--XH_mlx:xxx-->
 */
 
 require_once($pth['folder']['plugins'] . 'newsletter/includes/nlfuncs.php');
@@ -114,7 +29,7 @@ use PHPMailer\PHPMailer\SMTP;
 
 if (isset($_GET['newsletterconfirm'])) {
     $f = 'newsletterconfirm';
-    $o .= confirmSubscription();
+    $o .= newsletterConfirmSubscription();
 }
 
 $mail_confirm_subscribtion = $plugin_cf['newsletter']['mail_confirm_subscribtion'];
@@ -130,12 +45,12 @@ function newsletter($newspage_list)
     && $_SERVER['REQUEST_METHOD'] == 'POST'
     && !empty($_POST['subscribermail'])) {
         //Spam protection, Honeypot
-        $honeypotCheck = nl_fieldHoneypotCheck();
+        $honeypotCheck = newsletterFieldHoneypotCheck();
         if ($honeypotCheck) {
             return $honeypotCheck;
         }
         //Spam protection, Time
-        $timeCheck = nl_fieldSpamTimeCheck();
+        $timeCheck = newsletterFieldSpamTimeCheck();
         if ($timeCheck) {
             return $timeCheck;
         }
@@ -146,7 +61,7 @@ function newsletter($newspage_list)
     if (trim($plugin_tx['newsletter']['subscriber_fields_label'])!="") {
         $labels=explode(trim($plugin_tx['newsletter']['subscriber_fields_delimiter']),$plugin_tx['newsletter']['subscriber_fields_label']);
         for ($i=0; $i<sizeof($labels); $i++) {    
-      $subscriberfield[$i]=isset($_POST[rswu(trim($labels[$i]))]) ? $_POST[rswu(trim($labels[$i]))] : (isset($_GET[rswu(trim($labels[$i]))])?$_GET[rswu(trim($labels[$i]))]:"");
+      $subscriberfield[$i]=isset($_POST[newsletterUnderline4Spaces(trim($labels[$i]))]) ? $_POST[newsletterUnderline4Spaces(trim($labels[$i]))] : (isset($_GET[newsletterUnderline4Spaces(trim($labels[$i]))])?$_GET[newsletterUnderline4Spaces(trim($labels[$i]))]:"");
         }
     }
     $newspages=array();
@@ -167,39 +82,39 @@ function newsletter($newspage_list)
             //$plugin_cf['newsletter']['from']=(trim($plugin_cf['newsletter']['from'])=="")?$cf['mailform']['email']:$plugin_cf['newsletter']['from'];
             if ($adddel==$plugin_tx['newsletter']['subscribe']) {    // add mail to subscriber list
                 if (stristr($mail_confirm_subscribtion,"user")) {
-                    $o.= newsletter_confirmation($newspages, $newspage_list, $subscribermail, $subscriberfield);
+                    $o.= newsletterConfirmation($newspages, $newspage_list, $subscribermail, $subscriberfield);
                 }
                 else {
-                    $o.=newsletter_AddSubscriberToList($newspages, $subscribermail, $subscriberfield);
-                    $o.=newsletter_create_form($newspage_list, $subscribermail, $subscriberfield, $newspages);
+                    $o.=newsletterAddSubscriberToList($newspages, $subscribermail, $subscriberfield);
+                    $o.=newsletterCreateForm($newspage_list, $subscribermail, $subscriberfield, $newspages);
                 }
             }    // end - else if
             else if ($adddel==$plugin_tx['newsletter']['unsubscribe']) {    // remove mail from subscriber list
-                    $o.=newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfield);
-                    $o.=newsletter_create_form($newspage_list, $subscribermail, $subscriberfield, $newspages);
+                    $o.=newsletterRemoveSubscriber($newspages, $subscribermail, $subscriberfield);
+                    $o.=newsletterCreateForm($newspage_list, $subscribermail, $subscriberfield, $newspages);
             }   
         }
         else {
             $o.='<p class="newsletter_subscribe_errmsg">'.$plugin_tx['newsletter']["error_newsletter_selected"].'</p>';
-            $o.=newsletter_create_form($newspage_list, $subscribermail, $subscriberfield, $newspages);
+            $o.=newsletterCreateForm($newspage_list, $subscribermail, $subscriberfield, $newspages);
     }
     }    // end - if ($adddel!='')
     else {        // make subscribe/unsubscribe form
-        $o.=newsletter_create_form($newspage_list, $subscribermail, $subscriberfield, $newspages);
+        $o.=newsletterCreateForm($newspage_list, $subscribermail, $subscriberfield, $newspages);
     }
     $o.='</fieldset><!--Newsletter-->';
     return $o;
 }
 
-function newsletter_confirmation($newspages, $newspage_list, $subscribermail, $subscriberfield) {
+function newsletterConfirmation($newspages, $newspage_list, $subscribermail, $subscriberfield) {
 
     global $plugin_tx, $subscribe_confirmation_mail;
 
     //echo "newsletter_confirmation";
     $crform = '';
     $subscribe = '';
-    if (newsletter_verify_email($subscribermail)
-    && newsletter_verify_fields($subscriberfield)) {
+    if (newsletterVerifyMail($subscribermail)
+    && newsletterVerifyFields($subscriberfield)) {
         foreach($newspages as $np) {
             $subscriber_class = 'newsletter_subscribe_ok';
             //disable confirmation
@@ -218,23 +133,23 @@ function newsletter_confirmation($newspages, $newspage_list, $subscribermail, $s
             $confirm_str .= '¤¤¤' . $np;
             //encrypt
             $confirm_str = newsletterConvert($confirm_str,1);
-            $subscribe .= newsletter_subscription_mail($subscribermail,
-                                                       $plugin_tx['newsletter']['subscribe_confirm_subject'],
-                                                       sprintf($plugin_tx['newsletter']['subscribe_confirm'], $np),
-                                                       CMSIMPLE_URL . '?newsletterconfirm&cnf=' . $confirm_str);
-                                                       //& -> text based e-mail can't handle &amp; // lck/Holger
+            $subscribe .= newsletterSubscriptionMail($subscribermail,
+                                                     $plugin_tx['newsletter']['subscribe_confirm_subject'],
+                                                     sprintf($plugin_tx['newsletter']['subscribe_confirm'], $np),
+                                                     CMSIMPLE_URL . '?newsletterconfirm&cnf=' . $confirm_str);
+                                                     //& -> text based e-mail can't handle &amp; // lck/Holger
         }
     } else {
-        if (!newsletter_verify_email($subscribermail))
+        if (!newsletterVerifyMail($subscribermail))
             $subscribe = '<p>' . $plugin_tx['newsletter']['mail_not_valid'] . '</p>';
-        if (!newsletter_verify_fields($subscriberfield)) {
+        if (!newsletterVerifyFields($subscriberfield)) {
             $subscribe.= '<p>'.$plugin_tx['newsletter']['subscriber_fields_mandatory'].'</p>';
         }
         $subscriber_class = 'newsletter_subscribe_errmsg';
-        $crform .= newsletter_create_form($newspage_list,
-                                          $subscribermail,
-                                          $subscriberfield,
-                                          $newspages);
+        $crform .= newsletterCreateForm($newspage_list,
+                                        $subscribermail,
+                                        $subscriberfield,
+                                        $newspages);
     }
     $subscribe = '<div class="' . $subscriber_class . '">' . $subscribe . '</div>' . $crform;
 
@@ -242,7 +157,7 @@ function newsletter_confirmation($newspages, $newspage_list, $subscribermail, $s
 }
 
 
-function newsletter_create_form($newspage_list, $subscribermail, $subscriberfield, $newspages) {
+function newsletterCreateForm($newspage_list, $subscribermail, $subscriberfield, $newspages) {
 
     global $plugin_cf, $plugin_tx, $sn, $su, $hjs, $onload;
 
@@ -383,9 +298,9 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
             $user_input .= '<span class="newsletter_label">'
                          . trim($labels[$i])
                          . ':&nbsp;</span><input name="'
-                         . rswu(trim($labels[$i]))
+                         . newsletterUnderline4Spaces(trim($labels[$i]))
                          . '" id="'
-                         . rswu(trim($labels[$i]))
+                         . newsletterUnderline4Spaces(trim($labels[$i]))
                          . '" type="text" class="newsletter_inputfield" value="'
                          . $subscriberfield[$i]
                          . ($mandatory
@@ -413,7 +328,7 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
         foreach ($newspage_arr as $np) {
             $checked = false;
             for ($i = 0; $i < sizeof($newspages); $i++) {
-                if (rswu(trim($np)) == trim($newspages[$i])) {
+                if (newsletterUnderline4Spaces(trim($np)) == trim($newspages[$i])) {
                     $checked = true;
                 }
             }
@@ -427,7 +342,7 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
                     ? ' checked="yes"'
                     : '')
                 . ' value="'
-                . rswu(trim($np))
+                . newsletterUnderline4Spaces(trim($np))
                 . '">'
                 . "\n";
         }
@@ -435,16 +350,16 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
     } else {
         // singel newsletter subscribe
         $o .= '<input name="single_newspage" type="hidden" value="'
-            . rswu($newspage_list)
+            . newsletterUnderline4Spaces($newspage_list)
             . '">'
             . '&nbsp;';
     }
     //Spam protection
     if ($plugin_cf['newsletter']['spam_protection'] == 'true') {
         //Spam protection, Honeypot
-        $o .= nl_fieldHoneypotDisplay();
+        $o .= newsletterFieldHoneypotDisplay();
         //Spam protection, Timecheck
-        $o .= nl_fieldSpamTimeDisplay();
+        $o .= newsletterFieldSpamTimeDisplay();
     }
     // Submit button
     $o .= '<br>'
@@ -459,26 +374,18 @@ function newsletter_create_form($newspage_list, $subscribermail, $subscriberfiel
     return $o;
 }
 
-function rswu($fname)
-{
-    if ($fname) {
-        return str_replace(' ', '_', $fname);
-    }
-    return false;
-}
-
-function newsletter_AddSubscriberToList($newspages, $subscribermail, $subscriberfield) {
+function newsletterAddSubscriberToList($newspages, $subscribermail, $subscriberfield) {
 
     global $plugin_tx, $pth, $mail_confirm_subscribtion, $su;
 
     $subscribe_msg = '';
-    if (newsletter_verify_email($subscribermail)
-    &&  newsletter_verify_fields($subscriberfield)) {
+    if (newsletterVerifyMail($subscribermail)
+    &&  newsletterVerifyFields($subscriberfield)) {
         $subscriber_class = 'newsletter_subscribe_ok';
         foreach ($newspages as $np) {
             $fhandle = $pth['folder']['plugins']
                      . 'newsletter/data/subscribe_'
-                     . rswu($np)
+                     . newsletterUnderline4Spaces($np)
                      . '.txt';
             if (is_readable($fhandle)) {
                 $fc = file($fhandle);
@@ -534,11 +441,11 @@ function newsletter_AddSubscriberToList($newspages, $subscribermail, $subscriber
             switch ($mail_confirm_subscribtion) {
                 //case 'yes':
                 case 'mail':
-                    $subscribe_msg .= newsletter_subscription_mail($subscribermail,
-                                                                   $plugin_tx['newsletter']['subscribe_succes_subject'],
-                                                                   sprintf($plugin_tx['newsletter']['mail_subscribe_succes'],
-                                                                           CMSIMPLE_URL . '?' . $su),
-                                                                   '');
+                    $subscribe_msg .= newsletterSubscriptionMail($subscribermail,
+                                                                 $plugin_tx['newsletter']['subscribe_succes_subject'],
+                                                                 sprintf($plugin_tx['newsletter']['mail_subscribe_succes'],
+                                                                         CMSIMPLE_URL . '?' . $su),
+                                                                 '');
                     break;
                 case 'user':
                     $subscribe_msg .= $plugin_tx['newsletter']['subscribe_confirm_text'];
@@ -559,11 +466,11 @@ function newsletter_AddSubscriberToList($newspages, $subscribermail, $subscriber
                            . $subscribe_msg
                            . '</p></div>';
     } else { // user data error
-        if (!newsletter_verify_email($subscribermail)) {
+        if (!newsletterVerifyMail($subscribermail)) {
             $subscribe_msg = $plugin_tx['newsletter']['mail_not_valid']
                            . '&nbsp;';
         }
-        if (!newsletter_verify_fields ($subscriberfield)) {
+        if (!newsletterVerifyFields($subscriberfield)) {
             $subscribe_msg .= $plugin_tx['newsletter']['subscriber_fields_mandatory'];
         }
         $subscriber_class = 'newsletter_subscribe_errmsg';
@@ -572,7 +479,7 @@ function newsletter_AddSubscriberToList($newspages, $subscribermail, $subscriber
     return $subscribe_msg;
 }
 
-function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfield) {
+function newsletterRemoveSubscriber($newspages, $subscribermail, $subscriberfield) {
 
     global $plugin_tx, $plugin_cf, $pth;
 
@@ -581,7 +488,7 @@ function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfie
                  . '</span>'
                  . $subscribermail
                  . '</p>';
-    if (newsletter_verify_email($subscribermail)) {
+    if (newsletterVerifyMail($subscribermail)) {
         foreach ($newspages as $np) {
             $removed = '<p><span class="newsletter_name">'
                      . $np
@@ -598,11 +505,11 @@ function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfie
             $subscriber_class = 'newsletter_subscribe_errmsg';
             $fc = file($pth['folder']['plugins']
                 . 'newsletter/data/subscribe_'
-                . rswu($np)
+                . newsletterUnderline4Spaces($np)
                 . '.txt');
             if ($fh = fopen($pth['folder']['plugins']
                          . 'newsletter/data/subscribe_'
-                         . rswu($np)
+                         . newsletterUnderline4Spaces($np)
                          . '.txt',
                       'w')) {
                 foreach($fc as $line) {
@@ -616,10 +523,10 @@ function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfie
                                  . '</p>';
                         $subscriber_class = 'newsletter_subscribe_ok';
                         if (stristr($plugin_cf['newsletter']['mail_confirm_unsubscribtion'], 'yes')) {
-                            newsletter_subscription_mail($subscribermail,
-                                                         $plugin_tx['newsletter']['unsubscribe_succes_subject'],
-                                                         $np . ': ' . $plugin_tx['newsletter']['unsubscribe_succes'],
-                                                         '');
+                            newsletterSubscriptionMail($subscribermail,
+                                                       $plugin_tx['newsletter']['unsubscribe_succes_subject'],
+                                                       $np . ': ' . $plugin_tx['newsletter']['unsubscribe_succes'],
+                                                       '');
                         }
                     }
                 }    
@@ -652,21 +559,21 @@ function newsletter_RemoveSubscriber($newspages, $subscribermail, $subscriberfie
 }
 
 // Is this function still used?
-function extern_AddSubscriberToList($newspage, $subscribermail, $fieldarray) {
+/*function extern_AddSubscriberToList($newspage, $subscribermail, $fieldarray) {
 
     global $mail_confirm_subscribtion, $o;
 
     if (stristr($mail_confirm_subscribtion, 'user')) {
-        $o .= newsletter_confirmation($newspage, $subscribermail, $fieldarray);
+        $o .= newsletterConfirmation($newspage, $subscribermail, $fieldarray);
         return true;
     } else {
-        $o .= newsletter_AddSubscriberToList($newspage, $subscribermail, $fieldarray);
+        $o .= newsletterAddSubscriberToList($newspage, $subscribermail, $fieldarray);
         return true;
     }
     return false;
-}
+}*/
 
-function newsletter_subscription_mail($subscribermail, $subject, $msg, $link)
+function newsletterSubscriptionMail($subscribermail, $subject, $msg, $link)
 {
     global $plugin_cf, $plugin_tx, $cf, $tx, $pth, $sl, $subscribe_confirmation_mail;
 
@@ -716,7 +623,8 @@ function newsletter_subscription_mail($subscribermail, $subject, $msg, $link)
         return " ".$subscribe_confirmation_mail;    
 }
 
-function newsletter_verify_email($strEmailAddress){
+function newsletterVerifyMail($strEmailAddress){
+
     global $plugin_cf;
 
     $confirmed=preg_match("/^[^\s()<>@,;:\"\/\[\]?=]+@\w[\w-]*(\.\w[\w-]*)*\.[a-z]{2,}$/i",$strEmailAddress);
@@ -728,7 +636,8 @@ function newsletter_verify_email($strEmailAddress){
     return $confirmed;
 }
 
-function newsletter_verify_fields($inputs) {
+function newsletterVerifyFields($inputs) {
+
     global $plugin_tx;
         
     if (trim($plugin_tx['newsletter']['subscriber_fields_mandatory'])!="") {

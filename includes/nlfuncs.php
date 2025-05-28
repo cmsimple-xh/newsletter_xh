@@ -16,7 +16,7 @@
  * @license    GNU GPLv3 - http://www.gnu.org/licenses/gpl-3.0.en.html
 */
 
-function confirmSubscription()
+function newsletterConfirmSubscription()
 {
     global $mail_confirm_subscribtion, $plugin_cf, $plugin_tx;
 
@@ -39,7 +39,7 @@ function confirmSubscription()
     array_splice($cnfArray, 0, 1);
     // overwrite
     $mail_confirm_subscribtion = 'thx';
-    $o .= newsletter_AddSubscriberToList($newspageArray, $subscriberMail, $cnfArray);
+    $o .= newsletterAddSubscriberToList($newspageArray, $subscriberMail, $cnfArray);
 
     return $o;
 }
@@ -77,5 +77,13 @@ function newsletterConvert(string $string, bool $encrypt): string
         }
     }
 
+    return false;
+}
+
+function newsletterUnderline4Spaces($fname)
+{
+    if ($fname) {
+        return str_replace(' ', '_', $fname);
+    }
     return false;
 }

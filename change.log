@@ -1,0 +1,85 @@
+    Requirements: The plugin loader must be installed.
+    Disclaimer: No warranties.
+    Acknowledgement:
+    Newsletter idea is partly based on plugin GenizNewsletter
+    
+    History:
+    version 1.1 january 2010
+    some corrections of absolute path in unsubscribe and text mails and urencoding of path.
+    version 1.2 january 2010
+    more corrections of absolute path in unsubscribe and text mails.
+    version 1.3 february 2010
+    added charset in config.php (if empty then deafult=iso-8859-1
+    It's possible to use headers whith <h4> and above
+    added style for legend. 
+    version 1.4 february 2010
+    bug fix   
+    version 1.5 february 2010
+    bug fix (utf-8 correction of confirmation mail and encoding of unsubscribe link by Frank Z.)
+    version 1.6 february 2010
+    added user confirmation of subscription
+    version 1.7 february 2010
+    minor bug fixed. Some html line breaks moved to language files.  
+    version 1.8  may 2010
+    added urlencoding of subscription string when "mail confirm subscription" is set to "user".
+    version 1.9  may 2010
+    added user email adress to unsubscription link in newsletter
+    version 2.0 may 2010
+    fixed compatilbility issues with pd_scripting plugin. Calls to newsletter can be inserted through 
+    pd_scripting
+
+    Version 2.1.0
+    added link to newsleter if the mail is not redable in users mail client. Text defined in $plugin_tx['newsletter']['unreadable'] is converted to a link to newsletter page. To deactivate leave $plugin_tx['newsletter']['unreadable'] empty or remove {NOT_READABLE} from the template.
+    Optimized to use with pd_scripting
+    changed if charset is empty then cmsimple default codepage is used.
+
+    added user defined text fields in subscription record  (subscriber_fields_label).
+    Newsletter attacment are stored in downloads directory
+    
+    version 2.1.1 
+    fixed problems on some servers with magic quotes. eregi replaced by stristr
+    
+    version    2.1.2
+    bug fix eregi fix overwrited
+    
+    version 2.1.3  February 2011
+    eregi replaced by stristr again
+    
+    version 2.2.0 
+    Added template for subscription and unsubscription confirmation mail. Released under Linkware and Commercial License
+    version 2.2.1
+    IE bug fix in admin php
+    version 2.3.0 October 2012
+    Added subscription to severall newsletters in one call.
+    PhpMailer updated to version 5.2.1 , no changes applied to file class.phpmailer.php
+    Updated subscribe messages. 
+    version 2.3.1 October 2012
+        Minor bug fix in file admin.php, $mail->ClearAddresses() moved to end of the loop
+    version 2.3.2 
+        added recognition of relative urls and conversion to absolute urls
+        changed logging. Each shipment of newsletter is loged in a separate file. Old logs are copied to files with a time stamps. Until 5 copies are stored. The latest log file can be accessed trough plugin admin. Copies are only accessible trough ftp. 
+        compatiblity with CMSimple_XH ver. 1.6.
+    
+  version 2.3.3
+   added possibility for authentification on smtp servers that requires it.
+   enabled for CMSimple 1.6.x plugin calls {{{newsletter('....');}}}
+   addet server authentication variables in config.php
+   
+ version 2.4.0
+  php 7 ready
+  
+ version 2.4.1
+  minor bugs fix
+  
+ version 2.4.2
+   updated to CMSimple XH version 1.7
+   
+ version 2.5.0
+   updated to CMSimple XH version 1.8
+   
+ version 2.5.1
+   Spam protection, Honeypot, Time-dependent
+   $mail->CharSet = 'UTF-8'; fixed
+   use Phpmailer_XH only
+   remove now page splitting (since 1.7.0.) <!--XH_mlx:xxx-->
+   new encryption of the query string
