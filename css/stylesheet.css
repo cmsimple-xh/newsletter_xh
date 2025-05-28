@@ -26,10 +26,10 @@
 .newsletter_subscribe_ok p span.newsletter_abo_for {
     font-weight: bold;
 }
-.newsleter_fieldset {
+.newsletter_fieldset {
     padding: 10px;
 }
-.newsleter_legend {
+.newsletter_legend {
     color: gray;
 }
 .newsletter_label {
@@ -63,10 +63,10 @@
     font-size: 1.1em;
     margin: 0.5em 0;
 }
-.newsleter_fieldset #err {
+.newsletter_fieldset #err {
     color: red;
 }
-.newsleter_fieldset #err ~ #addel {
+.newsletter_fieldset #err ~ #addel {
     box-sizing: border-box;
     font-family: inherit;
     margin: 0.2em 0;

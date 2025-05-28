@@ -65,7 +65,14 @@ function newsletter($newspage_list)
         }
     }
     $newspages=array();
-    $o='<!-- CMSimple_XH plugin Newsletter_XH --><fieldset class="newsleter_fieldset"><legend class="newsleter_legend">'.( (isset($_GET['uns']))?'&nbsp;':$plugin_tx['newsletter']['subscribe'].'/').$plugin_tx['newsletter']['unsubscribe'].'&nbsp;</legend>';
+    $o = '<!-- CMSimple_XH plugin Newsletter_XH -->'
+       . "\n"
+       . '<fieldset class="newsletter_fieldset newsleter_fieldset">'
+       . "\n"
+       . '<legend class="newsletter_legend newsleter_legend">'
+       . ((isset($_GET['uns'])) ? '&nbsp;' : $plugin_tx['newsletter']['subscribe'] . '/')
+       . $plugin_tx['newsletter']['unsubscribe']
+       .'&nbsp;</legend>';
     if ($adddel!='') {
         if (isset($_POST['single_newspage'])) {
             $newspages[]=$_POST['single_newspage'];

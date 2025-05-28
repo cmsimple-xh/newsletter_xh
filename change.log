@@ -78,8 +78,11 @@
    updated to CMSimple XH version 1.8
    
  version 2.5.1
-   Spam protection, Honeypot, Time-dependent
+   Spam protection, Honeypot and Time-dependent
    $mail->CharSet = 'UTF-8'; fixed
    use Phpmailer_XH only
    remove now page splitting (since 1.7.0.) <!--XH_mlx:xxx-->
    new encryption of the query string
+   function names standardized
+   changelog moved to separate file
+   typos in css classes corrected
