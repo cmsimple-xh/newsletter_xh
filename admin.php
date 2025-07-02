@@ -399,7 +399,7 @@ if (XH_wantsPluginAdministration('newsletter')) {
         //$newsletter_t .= plugin_admin_common($action, $admin, $plugin);
         //**************************************************************************
         $nl_pluginName = 'Newsletter_XH';
-        $nl_pluginVersion = '2.5.0';
+        $nl_pluginVersion = '2.5.1';
         $nl_copyright = '2025';
         $nl_cmsVersionArray = array('1.7.0', 'and higher');
         $nl_phpVersion = '7.4';
