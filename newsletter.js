@@ -1,21 +1,5 @@
-function getFocus() { 
+document.addEventListener("DOMContentLoaded", function () { 
     document.getElementById("subscribermail").focus();
-}
-function addLoadEvent(func) { // for version before CMSimple_XH 1.2
-    var oldonload = window.onload;
-    if (typeof window.onload != "function") {
-    window.onload = func;
-    } else {
-    window.onload = function() {
-        if (oldonload) {
-        oldonload();
-        }
-        func();
-    }
-    }
-}
-addLoadEvent(function() {
-    getFocus();
 });
 
 var newsletterI18n = JSON.parse(document.querySelector("script[data-newsletter-i18n]").dataset.newsletterI18n);

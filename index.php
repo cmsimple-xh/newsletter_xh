@@ -166,12 +166,11 @@ function newsletterConfirmation($newspages, $newspage_list, $subscribermail, $su
 
 function newsletterCreateForm($newspage_list, $subscribermail, $subscriberfield, $newspages) {
 
-    global $plugin_cf, $plugin_tx, $sn, $su, $hjs, $onload, $pth;
+    global $plugin_cf, $plugin_tx, $sn, $su, $hjs, $pth;
 
     $ptx = $plugin_tx['newsletter'];
 
     $o = '';
-    $onload .= 'getFocus()';
     $script = $pth['folder']['plugins'] . 'newsletter/newsletter.js';
     $json = json_encode([
         "fieldsEmpty" => $ptx['subscriber_fields_empty'],
