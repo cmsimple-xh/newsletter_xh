@@ -166,85 +166,18 @@ function newsletterConfirmation($newspages, $newspage_list, $subscribermail, $su
 
 function newsletterCreateForm($newspage_list, $subscribermail, $subscriberfield, $newspages) {
 
-    global $plugin_cf, $plugin_tx, $sn, $su, $hjs, $onload;
+    global $plugin_cf, $plugin_tx, $sn, $su, $hjs, $onload, $pth;
 
     $ptx = $plugin_tx['newsletter'];
 
     $o = '';
     $onload .= 'getFocus()';
-    $hjs .= '<script>
-    /* <![CDATA[ */
-    function getFocus() { 
-      document.getElementById("subscribermail").focus();
-    }
-    function addLoadEvent(func) { // for version before CMSimple_XH 1.2
-      var oldonload = window.onload;
-      if (typeof window.onload != "function") {
-        window.onload = func;
-      } else {
-        window.onload = function() {
-          if (oldonload) {
-            oldonload();
-          }
-          func();
-        }
-      }
-    }
-    addLoadEvent(function() {
-        getFocus();
-    });
-    
-        function hideFields(vfield) {
-        if (vfield.selectedIndex == 1) { 
-            document.getElementById(\'userinput\').style.display=\'none\';
-        } 
-        else {
-            document.getElementById(\'userinput\').style.display=\'block\';
-        }
-    }
-
-    function trim(stringToTrim) {
-        return stringToTrim.replace(/^\s+|\s+$/g,"");
-    }
-    
-    var busy=0;
-    function newsletter_EmptyField(field) {
-    if (busy) return;
-         busy=1;
-        if (trim(field.value)=="") {
-             field.style.backgroundColor ="#FFAEAE";
-            document.getElementById("err").innerHTML=\'' . $ptx['subscriber_fields_empty'].'\'; 
-          field.focus();
-          setTimeout("busy=0", 1);
-          return true;
-         }
-         else {
-             field.style.backgroundColor ="#FFFFFF";
-            document.getElementById("err").innerHTML="&nbsp;";
-          busy=0;
-          return false;
-        }  
-    }
-
-    function newsletter_ValidEmail(form){
-        if (busy) return;
-         busy=1;
-      var validRegExp = /^[^\s()<>@,;:\"\/\[\]?=]+@\w[\w-]*(\.\w[\w-]*)*\.[a-z]{2,}$/i;
-      if (form.subscribermail.value.search(validRegExp) == -1 ) {
-           document.getElementById("err").innerHTML="' . $ptx['subscriber_email_empty'].'";
-             form.subscribermail.style.backgroundColor ="#FFAEAE";
-             form.subscribermail.focus();
-             form.subscribermail.select();
-             setTimeout("busy=0", 1);
-        return false;
-      }
-        form.subscribermail.style.backgroundColor ="#FFFFFF"; 
-        document.getElementById(\'err\').innerHTML=\'&nbsp;\'; 
-        busy=0;
-    return true; 
-    }
-    /* ]]> */
-</script>';
+    $script = $pth['folder']['plugins'] . 'newsletter/newsletter.js';
+    $json = json_encode([
+        "fieldsEmpty" => $ptx['subscriber_fields_empty'],
+        "emailEmpty" => $ptx['subscriber_email_empty'],
+    ]);
+    $hjs .= '<script src="' . XH_hsc($script) . '" data-newsletter-i18n=\''. $json . '\'></script>';
     $o .= "\n"
         . '<form name="subscribe" id="subscribe" method="post" action="'
         . $sn
@@ -292,7 +225,7 @@ function newsletterCreateForm($newspage_list, $subscribermail, $subscriberfield,
         . (isset($_GET['uns'])
             ? newsletterConvert($_GET['uns'], 0)
             : $subscribermail)
-        . '" onblur="newsletter_ValidEmail(document.subscribe);">'
+        . '">'
         . '<br>'
         . "\n";
     $mandatory = (trim($ptx['subscriber_fields_mandatory']) != '');
@@ -311,7 +244,7 @@ function newsletterCreateForm($newspage_list, $subscribermail, $subscriberfield,
                          . '" type="text" class="newsletter_inputfield" value="'
                          . $subscriberfield[$i]
                          . ($mandatory
-                            ? '" onblur="newsletter_EmptyField(this);"'
+                            ? '" data-newsletter-mandatory'
                             : '"')
                          . '><br>'
                          . "\n";
